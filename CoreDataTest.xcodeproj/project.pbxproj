@@ -16,6 +16,7 @@
 		35AA86181BA0A20E004DA80D /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */; };
 		35AA86191BA0A20E004DA80D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86171BA0A20E004DA80D /* User.swift */; };
 		35AA861B1BA0A3EE004DA80D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */; };
+		35F31F7A1BA0F04400B8CCA5 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F791BA0F04400B8CCA5 /* DataSource.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		35AA86171BA0A20E004DA80D /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		35F31F791BA0F04400B8CCA5 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSource.swift; path = ../DataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				35AA86081BA0A168004DA80D /* CoreDataTest.xcdatamodeld */,
 				35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */,
 				35AA86171BA0A20E004DA80D /* User.swift */,
+				35F31F791BA0F04400B8CCA5 /* DataSource.swift */,
 				35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */,
 			);
 			path = CoreDataTest;
@@ -147,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35F31F7A1BA0F04400B8CCA5 /* DataSource.swift in Sources */,
 				35AA861B1BA0A3EE004DA80D /* CoreDataManager.swift in Sources */,
 				35AA86041BA0A168004DA80D /* ViewController.swift in Sources */,
 				35AA860A1BA0A168004DA80D /* CoreDataTest.xcdatamodeld in Sources */,
