@@ -62,7 +62,7 @@ public class CoreDataManager: NSObject {
     // If the model doesn't already exist, it is created from the application's model.
     var managedObjectModel: NSManagedObjectModel {
         if _managedObjectModel == nil {
-            let modelURL = NSBundle.mainBundle().URLForResource(kModmName, withExtension: "momd")
+            let modelURL = NSBundle(forClass: self.dynamicType).URLForResource(kModmName, withExtension: "momd")
             _managedObjectModel = NSManagedObjectModel(contentsOfURL: modelURL!)
         }
         return _managedObjectModel!
