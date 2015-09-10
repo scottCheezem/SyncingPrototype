@@ -101,7 +101,7 @@ class CoreDataManager: NSObject {
 
     func executeFetchRequest(request:NSFetchRequest, completionHandler:(results: [AnyObject]?) -> Void) -> () {
         self.managedObjectContext.performBlock{
-            var results:Array<AnyObject>?
+            var results:[AnyObject]?
             do {
                 results = try self.managedObjectContext.executeFetchRequest(request)
             } catch let error as NSError {
@@ -113,7 +113,7 @@ class CoreDataManager: NSObject {
 
     // #pragma mark - save methods
 
-    func save() {
+    func save(completionHandler:(finished: Bool) -> Void) -> () {
         let context:NSManagedObjectContext = self.managedObjectContext;
         if context.hasChanges {
             context.performBlockAndWait{
@@ -153,9 +153,11 @@ class CoreDataManager: NSObject {
 
     // #pragma mark - Utilities
 
-    func deleteEntity(object:NSManagedObject) -> () {
+    func deleteEntity(object:NSManagedObject, completionHandler:(finished: Bool) -> Void) -> () {
         object.managedObjectContext!.deleteObject(object)
-        save()
+        save { (finished) -> Void in
+            completionHandler(finished: finished)
+        }
     }
 
     // #pragma mark - Application's Documents directory
