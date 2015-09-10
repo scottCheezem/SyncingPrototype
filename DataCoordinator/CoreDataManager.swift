@@ -137,7 +137,7 @@ public class CoreDataManager: NSObject {
         _managedObjectContext = nil
         _persistentStoreCoordinator = nil
         
-        // Recreate
+        // Recreate - TODO check validity
         self.managedObjectContext
     }
     
