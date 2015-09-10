@@ -14,9 +14,7 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     
     static let sharedInstance = DataSource()
     
-    override init () {
-        CoreDataManager.shared.initialize()
-        
+    override init () {        
         let userFetchRequest = NSFetchRequest(entityName: "User")
         let sortDescriptor = NSSortDescriptor(key: "firstName", ascending: false)
         userFetchRequest.sortDescriptors = [sortDescriptor]
@@ -49,13 +47,18 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func allObjectsOfClass(cls: AnyClass, completionHandler:(results: [AnyObject]?) -> Void) -> (){
-        let fetchRequest:NSFetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName("User", inManagedObjectContext: CoreDataManager.shared.managedObjectContext)
-        CoreDataManager.shared.executeFetchRequest(fetchRequest) { (results) -> Void in
-            completionHandler(results: results)
+    func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
+        if cls == User.self {
+            return userFetchedResultsController?.fetchedObjects
         }
+        return nil
     }
+    
+    func cleanAndResetCoreData() {
+        
+    }
+    
+    // #pragma mark - NSFetchedResultsControllerDelegate
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
 //        if delegate != nil && delegate.respondsToSelector("todo") {

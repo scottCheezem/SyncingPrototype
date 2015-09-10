@@ -20,14 +20,14 @@ class CoreDataManager: NSObject {
 
     static let shared = CoreDataManager()
 
-    func initialize() {
+    override init() {
+        super.init()
         self.managedObjectContext
     }
 
     // #pragma mark - Core Data stack
 
-    var managedObjectContext: NSManagedObjectContext{
-        
+    var managedObjectContext: NSManagedObjectContext {
         if NSThread.isMainThread() {
             if _managedObjectContext == nil {
                 if let coordinator: NSPersistentStoreCoordinator? = self.persistentStoreCoordinator {
@@ -68,7 +68,6 @@ class CoreDataManager: NSObject {
         return _managedObjectModel!
     }
 
-
     // Returns the persistent store coordinator for the application.
     // If the coordinator doesn't already exist, it is created and the application's store added to it.
     var persistentStoreCoordinator: NSPersistentStoreCoordinator {
@@ -87,29 +86,29 @@ class CoreDataManager: NSObject {
 
     // #pragma mark - fetches
 
-    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
-        var results:Array<AnyObject>?
-        self.managedObjectContext.performBlockAndWait{
-            do {
-                results = try self.managedObjectContext.executeFetchRequest(request)
-            } catch let error as NSError {
-                print("Warning!! \(error.description)")
-            }
-        }
-        return results
-    }
-
-    func executeFetchRequest(request:NSFetchRequest, completionHandler:(results: [AnyObject]?) -> Void) -> () {
-        self.managedObjectContext.performBlock{
-            var results:[AnyObject]?
-            do {
-                results = try self.managedObjectContext.executeFetchRequest(request)
-            } catch let error as NSError {
-                print(error.description)
-            }
-            completionHandler(results: results)
-        }
-    }
+//    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
+//        var results:[AnyObject]?
+//        self.managedObjectContext.performBlockAndWait{
+//            do {
+//                results = try self.managedObjectContext.executeFetchRequest(request)
+//            } catch let error as NSError {
+//                print("Warning!! \(error.description)")
+//            }
+//        }
+//        return results
+//    }
+//
+//    func executeFetchRequest(request:NSFetchRequest, completionHandler:(results: [AnyObject]?) -> Void) -> () {
+//        self.managedObjectContext.performBlock{
+//            var results:[AnyObject]?
+//            do {
+//                results = try self.managedObjectContext.executeFetchRequest(request)
+//            } catch let error as NSError {
+//                print(error.description)
+//            }
+//            completionHandler(results: results)
+//        }
+//    }
 
     // #pragma mark - save methods
 
@@ -124,7 +123,6 @@ class CoreDataManager: NSObject {
                 }
                 
                 if context.parentContext != nil {
-                    
                     context.parentContext!.performBlockAndWait{
                         do {
                             try context.parentContext!.save()
@@ -133,6 +131,7 @@ class CoreDataManager: NSObject {
                         }
                     }
                 }
+                completionHandler(finished: true)
             }
         }
     }
@@ -140,7 +139,6 @@ class CoreDataManager: NSObject {
     func contextWillSave(notification:NSNotification){
         let context : NSManagedObjectContext! = notification.object as! NSManagedObjectContext
         let insertedObjects : NSSet = context.insertedObjects
-        
         if insertedObjects.count != 0 {
             do {
                 try context.obtainPermanentIDsForObjects(insertedObjects.allObjects as! [NSManagedObject])
@@ -148,7 +146,6 @@ class CoreDataManager: NSObject {
                 print(error.description)
             }
         }
-        
     }
 
     // #pragma mark - Utilities
