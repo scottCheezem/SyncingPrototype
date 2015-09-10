@@ -16,9 +16,9 @@ var _managedObjectContext: NSManagedObjectContext? = nil
 var _managedObjectModel: NSManagedObjectModel? = nil
 var _persistentStoreCoordinator: NSPersistentStoreCoordinator? = nil
 
-class CoreDataManager: NSObject {
+public class CoreDataManager: NSObject {
 
-    static let shared = CoreDataManager()
+    public static let shared = CoreDataManager()
 
     override init() {
         super.init()
@@ -27,7 +27,7 @@ class CoreDataManager: NSObject {
 
     // #pragma mark - Core Data stack
 
-    var managedObjectContext: NSManagedObjectContext {
+    public var managedObjectContext: NSManagedObjectContext {
         if NSThread.isMainThread() {
             if _managedObjectContext == nil {
                 if let coordinator: NSPersistentStoreCoordinator? = self.persistentStoreCoordinator {

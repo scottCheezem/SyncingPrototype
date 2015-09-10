@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import CoreData
+import CoreData
 import DataCoordinator
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
