@@ -14,9 +14,7 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     
     static let sharedInstance = DataSource()
     
-    override init () {
-        CoreDataManager.shared.initialize()
-        
+    override init () {        
         let userFetchRequest = NSFetchRequest(entityName: "User")
         let sortDescriptor = NSSortDescriptor(key: "firstName", ascending: false)
         userFetchRequest.sortDescriptors = [sortDescriptor]
