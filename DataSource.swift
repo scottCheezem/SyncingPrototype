@@ -8,11 +8,11 @@
 
 import CoreData
 
-class DataSource : NSObject, NSFetchedResultsControllerDelegate {
+public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
 
     private var userFetchedResultsController : NSFetchedResultsController?
     
-    static let sharedInstance = DataSource()
+    public static let sharedInstance = DataSource()
     
     override init () {        
         let userFetchRequest = NSFetchRequest(entityName: "User")
@@ -27,19 +27,19 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         performFetch()
     }
     
-    func save() {
+    public func save() {
         CoreDataManager.shared.save { (finished) -> Void in
             self.performFetch()
         }
     }
     
-    func saveObjects(objects: [AnyObject]) {
+    public func saveObjects(objects: [AnyObject]) {
         CoreDataManager.shared.save { (finished) -> Void in
             self.performFetch()
         }
     }
     
-    func deleteObjects(objects: [AnyObject]) {
+    public func deleteObjects(objects: [AnyObject]) {
         for object in objects {
             CoreDataManager.shared.deleteEntity(object as! User, completionHandler: { (finished) -> Void in
                 self.performFetch()
@@ -47,7 +47,7 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
+    public func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
         if cls == User.self {
             return userFetchedResultsController?.fetchedObjects
         }
@@ -60,7 +60,7 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     
     // #pragma mark - NSFetchedResultsControllerDelegate
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    public func controllerDidChangeContent(controller: NSFetchedResultsController) {
 //        if delegate != nil && delegate.respondsToSelector("todo") {
 //            delegate.todo()
 //        }
