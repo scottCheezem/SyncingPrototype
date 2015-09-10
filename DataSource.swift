@@ -49,12 +49,11 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func allObjectsOfClass(cls: AnyClass, completionHandler:(results: [AnyObject]?) -> Void) -> (){
-        let fetchRequest:NSFetchRequest = NSFetchRequest()
-        fetchRequest.entity = NSEntityDescription.entityForName("User", inManagedObjectContext: CoreDataManager.shared.managedObjectContext)
-        CoreDataManager.shared.executeFetchRequest(fetchRequest) { (results) -> Void in
-            completionHandler(results: results)
+    func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
+        if cls == User.self {
+            return userFetchedResultsController?.fetchedObjects
         }
+        return nil
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {

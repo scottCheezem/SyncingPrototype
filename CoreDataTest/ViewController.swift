@@ -30,11 +30,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func getUsers() {
-        DataSource.sharedInstance.allObjectsOfClass(User.self) { (results) -> Void in
-            self.users = results as! [User]
-            dispatch_async(dispatch_get_main_queue()) { () -> Void in
-                self.tableView.reloadData()
-            }
+        users = DataSource.sharedInstance.allObjectsOfClass(User.self) as! [User]
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.tableView.reloadData()
         }
     }
     

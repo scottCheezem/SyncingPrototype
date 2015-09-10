@@ -85,29 +85,29 @@ class CoreDataManager: NSObject {
 
     // #pragma mark - fetches
 
-    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
-        var results:[AnyObject]?
-        self.managedObjectContext.performBlockAndWait{
-            do {
-                results = try self.managedObjectContext.executeFetchRequest(request)
-            } catch let error as NSError {
-                print("Warning!! \(error.description)")
-            }
-        }
-        return results
-    }
-
-    func executeFetchRequest(request:NSFetchRequest, completionHandler:(results: [AnyObject]?) -> Void) -> () {
-        self.managedObjectContext.performBlock{
-            var results:[AnyObject]?
-            do {
-                results = try self.managedObjectContext.executeFetchRequest(request)
-            } catch let error as NSError {
-                print(error.description)
-            }
-            completionHandler(results: results)
-        }
-    }
+//    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
+//        var results:[AnyObject]?
+//        self.managedObjectContext.performBlockAndWait{
+//            do {
+//                results = try self.managedObjectContext.executeFetchRequest(request)
+//            } catch let error as NSError {
+//                print("Warning!! \(error.description)")
+//            }
+//        }
+//        return results
+//    }
+//
+//    func executeFetchRequest(request:NSFetchRequest, completionHandler:(results: [AnyObject]?) -> Void) -> () {
+//        self.managedObjectContext.performBlock{
+//            var results:[AnyObject]?
+//            do {
+//                results = try self.managedObjectContext.executeFetchRequest(request)
+//            } catch let error as NSError {
+//                print(error.description)
+//            }
+//            completionHandler(results: results)
+//        }
+//    }
 
     // #pragma mark - save methods
 
@@ -130,6 +130,7 @@ class CoreDataManager: NSObject {
                         }
                     }
                 }
+                completionHandler(finished: true)
             }
         }
     }
