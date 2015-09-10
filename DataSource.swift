@@ -5,6 +5,7 @@
 //  Created by Adam Bailey on 9/9/15.
 //  Copyright © 2015 Beam Technologies. All rights reserved.
 //
+
 import CoreData
 
 class DataSource : NSObject, NSFetchedResultsControllerDelegate {
@@ -48,14 +49,6 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    internal func performFetch() {
-        do {
-            try userFetchedResultsController?.performFetch()
-        } catch let error as NSError {
-            print(error.description)
-        }
-    }
-    
     func allObjectsOfClass(cls: AnyClass, completionHandler:(results: [AnyObject]?) -> Void) -> (){
         let fetchRequest:NSFetchRequest = NSFetchRequest()
         fetchRequest.entity = NSEntityDescription.entityForName("User", inManagedObjectContext: CoreDataManager.shared.managedObjectContext)
@@ -68,5 +61,13 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
 //        if delegate != nil && delegate.respondsToSelector("todo") {
 //            delegate.todo()
 //        }
+    }
+    
+    internal func performFetch() {
+        do {
+            try userFetchedResultsController?.performFetch()
+        } catch let error as NSError {
+            print(error.description)
+        }
     }
 }
