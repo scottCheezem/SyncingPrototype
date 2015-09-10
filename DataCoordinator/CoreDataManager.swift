@@ -86,18 +86,38 @@ public class CoreDataManager: NSObject {
         return _persistentStoreCoordinator!
     }
     
-    func cleanCoreData() {
+    func cleanCoreData(completionHandler:(success: Bool) -> Void) -> () {
         print("Resetting the core data database");
-
-        let fetchRequest = NSFetchRequest(entityName: "User")
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
+        let userFetchRequest = NSFetchRequest.init(entityName: "User")
+        userFetchRequest.includesPropertyValues = false // only managedObjectID
+        
+        var users = [User]()
         do {
-            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
-            print("Core data database has been successfully cleaned");
+            users = try managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
         } catch let error as NSError {
-            print("An error has occurred while cleaning " + error.description)
+            completionHandler(success: false)
+            print("An error has occurred while fetching " + error.description)
         }
+        
+        for user in users {
+            managedObjectContext.deleteObject(user)
+        }
+        save { (finished) -> Void in
+            completionHandler(success: true)
+            print("Core data database has been successfully cleaned");
+        }
+        
+//        iOS 9
+//        let fetchRequest = NSFetchRequest(entityName: "User")
+//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+//        
+//        do {
+//            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+//            print("Core data database has been successfully cleaned");
+//        } catch let error as NSError {
+//            print("An error has occurred while cleaning " + error.description)
+//        }
     }
     
     func resetCoreData() {
@@ -149,13 +169,14 @@ public class CoreDataManager: NSObject {
 
     // #pragma mark - save methods
 
-    func save(completionHandler:(finished: Bool) -> Void) -> () {
+    func save(completionHandler:(success: Bool) -> Void) -> () {
         let context:NSManagedObjectContext = self.managedObjectContext;
         if context.hasChanges {
             context.performBlockAndWait{
                 do {
                     try context.save()
                 } catch let error as NSError {
+                    completionHandler(success: false)
                     print(error.description)
                 }
                 
@@ -164,11 +185,12 @@ public class CoreDataManager: NSObject {
                         do {
                             try context.parentContext!.save()
                         } catch let error as NSError {
+                            completionHandler(success: false)
                             print(error.description)
                         }
                     }
                 }
-                completionHandler(finished: true)
+                completionHandler(success: true)
             }
         }
     }

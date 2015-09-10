@@ -27,24 +27,27 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         performFetch()
     }
     
-    public func save() {
-        CoreDataManager.shared.save { (finished) -> Void in
+    public func save(completionHandler:(success: Bool) -> Void) -> () {
+        CoreDataManager.shared.save { (success) -> Void in
             self.performFetch()
+            completionHandler(success: success)
         }
     }
     
-    public func saveObjects(objects: [AnyObject]) {
-        CoreDataManager.shared.save { (finished) -> Void in
+    public func saveObjects(objects: [AnyObject], completionHandler:(success: Bool) -> Void) -> () {
+        CoreDataManager.shared.save { (success) -> Void in
             self.performFetch()
+            completionHandler(success: success)
         }
     }
     
-    public func deleteObjects(objects: [AnyObject]) {
+    public func deleteObjects(objects: [AnyObject], completionHandler:(finished: Bool) -> Void) -> () {
         for object in objects {
             CoreDataManager.shared.deleteEntity(object as! User, completionHandler: { (finished) -> Void in
                 self.performFetch()
             })
         }
+        completionHandler(finished: true)
     }
     
     public func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
@@ -54,8 +57,15 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         return nil
     }
     
-    func cleanCoreData() {
-        CoreDataManager.shared.cleanCoreData()
+    public func cleanCoreData(completionHandler:(success: Bool) -> Void) -> () {
+        CoreDataManager.shared.cleanCoreData { (success) -> Void in
+            self.performFetch()
+            completionHandler(success: success)
+        }
+    }
+    
+    public func resetCoreData() {
+        CoreDataManager.shared.resetCoreData()
     }
     
     // #pragma mark - NSFetchedResultsControllerDelegate
