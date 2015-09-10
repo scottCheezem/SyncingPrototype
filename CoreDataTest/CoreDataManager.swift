@@ -6,7 +6,7 @@
 //  Copyright © 2015 Beam Technologies. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import CoreData
 
 let kStoreName = "CoreDataTest.sqlite"
@@ -77,13 +77,50 @@ class CoreDataManager: NSObject {
             do {
                 try _persistentStoreCoordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: storeURL, options: self.databaseOptions())
             } catch let error as NSError {
+                if error.code >= NSPersistentStoreIncompatibleVersionHashError && error.code <= NSEntityMigrationPolicyError {
+                    resetCoreData()
+                }
                 print(error.description)
-                abort()
             }
         }
         return _persistentStoreCoordinator!
     }
+    
+    func cleanCoreData() {
+        print("Resetting the core data database");
 
+        let fetchRequest = NSFetchRequest(entityName: "User")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        do {
+            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
+            print("Core data database has been successfully cleaned");
+        } catch let error as NSError {
+            print("An error has occurred while cleaning " + error.description)
+        }
+    }
+    
+    func resetCoreData() {
+        let storesArray = _persistentStoreCoordinator?.persistentStores
+        
+        if let stores = storesArray {
+            for store in stores {
+                do {
+                    try NSFileManager.defaultManager().removeItemAtURL((store.URL)!)
+                } catch let error as NSError {
+                    print(error.description)
+                }
+            }
+        }
+        
+        // Reset - TODO Check validity
+        _managedObjectContext = nil
+        _persistentStoreCoordinator = nil
+        
+        // Recreate
+        self.managedObjectContext
+    }
+    
     // #pragma mark - fetches
 
 //    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {

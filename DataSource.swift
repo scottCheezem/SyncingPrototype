@@ -54,8 +54,8 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         return nil
     }
     
-    func cleanAndResetCoreData() {
-        
+    func cleanCoreData() {
+        CoreDataManager.shared.cleanCoreData()
     }
     
     // #pragma mark - NSFetchedResultsControllerDelegate
