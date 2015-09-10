@@ -19,6 +19,7 @@
 		0650EDEA1BA1E30900E83AD4 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F791BA0F04400B8CCA5 /* DataSource.swift */; };
 		0650EDEB1BA1E31100E83AD4 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */; };
 		0650EE031BA1E3FE00E83AD4 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDF51BA1E36A00E83AD4 /* Alamofire.framework */; };
+		0650EE061BA1E7D300E83AD4 /* DataCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0650EE051BA1E7D300E83AD4 /* DataCoordinator.swift */; };
 		35AA86021BA0A168004DA80D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86011BA0A168004DA80D /* AppDelegate.swift */; };
 		35AA86041BA0A168004DA80D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86031BA0A168004DA80D /* ViewController.swift */; };
 		35AA86071BA0A168004DA80D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35AA86051BA0A168004DA80D /* Main.storyboard */; };
@@ -108,6 +109,7 @@
 		0650EDD91BA1E0EE00E83AD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0650EDE51BA1E10900E83AD4 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		0650EDEC1BA1E36A00E83AD4 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
+		0650EE051BA1E7D300E83AD4 /* DataCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCoordinator.swift; sourceTree = "<group>"; };
 		35AA85FE1BA0A168004DA80D /* CoreDataTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreDataTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35AA86011BA0A168004DA80D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		35AA86031BA0A168004DA80D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				35AA86081BA0A168004DA80D /* CoreDataTest.xcdatamodeld */,
 				0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */,
 				0650EDCB1BA1E0EE00E83AD4 /* Info.plist */,
+				0650EE051BA1E7D300E83AD4 /* DataCoordinator.swift */,
 			);
 			path = DataCoordinator;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0650EE061BA1E7D300E83AD4 /* DataCoordinator.swift in Sources */,
 				0650EDE81BA1E2FA00E83AD4 /* User+CoreDataProperties.swift in Sources */,
 				0650EDE71BA1E2ED00E83AD4 /* CoreDataTest.xcdatamodeld in Sources */,
 				0650EDEA1BA1E30900E83AD4 /* DataSource.swift in Sources */,
@@ -663,6 +667,7 @@
 				0650EDE01BA1E0EE00E83AD4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0650EDE21BA1E0EE00E83AD4 /* Build configuration list for PBXNativeTarget "DataCoordinatorTests" */ = {
 			isa = XCConfigurationList;
@@ -671,6 +676,7 @@
 				0650EDE41BA1E0EE00E83AD4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		35AA85F91BA0A168004DA80D /* Build configuration list for PBXProject "CoreDataTest" */ = {
 			isa = XCConfigurationList;
