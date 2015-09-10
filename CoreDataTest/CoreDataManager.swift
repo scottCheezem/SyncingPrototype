@@ -20,7 +20,8 @@ class CoreDataManager: NSObject {
 
     static let shared = CoreDataManager()
 
-    func initialize() {
+    override init() {
+        super.init()
         self.managedObjectContext
     }
 

@@ -54,6 +54,12 @@ class DataSource : NSObject, NSFetchedResultsControllerDelegate {
         return nil
     }
     
+    func cleanAndResetCoreData() {
+        
+    }
+    
+    // #pragma mark - NSFetchedResultsControllerDelegate
+    
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
 //        if delegate != nil && delegate.respondsToSelector("todo") {
 //            delegate.todo()
