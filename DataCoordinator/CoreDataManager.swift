@@ -16,9 +16,9 @@ var _managedObjectContext: NSManagedObjectContext? = nil
 var _managedObjectModel: NSManagedObjectModel? = nil
 var _persistentStoreCoordinator: NSPersistentStoreCoordinator? = nil
 
-class CoreDataManager: NSObject {
+public class CoreDataManager: NSObject {
 
-    static let shared = CoreDataManager()
+    public static let shared = CoreDataManager()
 
     override init() {
         super.init()
@@ -27,7 +27,7 @@ class CoreDataManager: NSObject {
 
     // #pragma mark - Core Data stack
 
-    var managedObjectContext: NSManagedObjectContext {
+    public var managedObjectContext: NSManagedObjectContext {
         if NSThread.isMainThread() {
             if _managedObjectContext == nil {
                 if let coordinator: NSPersistentStoreCoordinator? = self.persistentStoreCoordinator {
@@ -62,7 +62,7 @@ class CoreDataManager: NSObject {
     // If the model doesn't already exist, it is created from the application's model.
     var managedObjectModel: NSManagedObjectModel {
         if _managedObjectModel == nil {
-            let modelURL = NSBundle.mainBundle().URLForResource(kModmName, withExtension: "momd")
+            let modelURL = NSBundle(forClass: self.dynamicType).URLForResource(kModmName, withExtension: "momd")
             _managedObjectModel = NSManagedObjectModel(contentsOfURL: modelURL!)
         }
         return _managedObjectModel!
