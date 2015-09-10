@@ -8,9 +8,9 @@
 
 import UIKit
 
-class DataCoordinator: NSObject {
+public class DataCoordinator: NSObject {
 
-    var coreDataManager: CoreDataManager?
+    
     
     
 }
