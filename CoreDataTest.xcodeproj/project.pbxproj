@@ -13,16 +13,16 @@
 		0650EDDC1BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; };
 		0650EDDD1BA1E0EE00E83AD4 /* DataCoordinator.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0650EDE61BA1E10900E83AD4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDE51BA1E10900E83AD4 /* CoreData.framework */; };
+		0650EDE71BA1E2ED00E83AD4 /* CoreDataTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86081BA0A168004DA80D /* CoreDataTest.xcdatamodeld */; };
+		0650EDE81BA1E2FA00E83AD4 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */; };
+		0650EDE91BA1E30100E83AD4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86171BA0A20E004DA80D /* User.swift */; };
+		0650EDEA1BA1E30900E83AD4 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F791BA0F04400B8CCA5 /* DataSource.swift */; };
+		0650EDEB1BA1E31100E83AD4 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */; };
 		35AA86021BA0A168004DA80D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86011BA0A168004DA80D /* AppDelegate.swift */; };
 		35AA86041BA0A168004DA80D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86031BA0A168004DA80D /* ViewController.swift */; };
 		35AA86071BA0A168004DA80D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35AA86051BA0A168004DA80D /* Main.storyboard */; };
-		35AA860A1BA0A168004DA80D /* CoreDataTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86081BA0A168004DA80D /* CoreDataTest.xcdatamodeld */; };
 		35AA860C1BA0A168004DA80D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35AA860B1BA0A168004DA80D /* Assets.xcassets */; };
 		35AA860F1BA0A168004DA80D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35AA860D1BA0A168004DA80D /* LaunchScreen.storyboard */; };
-		35AA86181BA0A20E004DA80D /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */; };
-		35AA86191BA0A20E004DA80D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86171BA0A20E004DA80D /* User.swift */; };
-		35AA861B1BA0A3EE004DA80D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */; };
-		35F31F7A1BA0F04400B8CCA5 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F791BA0F04400B8CCA5 /* DataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,9 +79,9 @@
 		35AA860B1BA0A168004DA80D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35AA860E1BA0A168004DA80D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35AA86101BA0A168004DA80D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		35AA86171BA0A20E004DA80D /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
+		35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "User+CoreDataProperties.swift"; path = "../CoreDataTest/User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		35AA86171BA0A20E004DA80D /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = ../CoreDataTest/User.swift; sourceTree = "<group>"; };
+		35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataManager.swift; path = ../CoreDataTest/CoreDataManager.swift; sourceTree = "<group>"; };
 		35F31F791BA0F04400B8CCA5 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSource.swift; path = ../DataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,6 +116,11 @@
 		0650EDC81BA1E0EE00E83AD4 /* DataCoordinator */ = {
 			isa = PBXGroup;
 			children = (
+				35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */,
+				35F31F791BA0F04400B8CCA5 /* DataSource.swift */,
+				35AA86171BA0A20E004DA80D /* User.swift */,
+				35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */,
+				35AA86081BA0A168004DA80D /* CoreDataTest.xcdatamodeld */,
 				0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */,
 				0650EDCB1BA1E0EE00E83AD4 /* Info.plist */,
 			);
@@ -161,11 +166,6 @@
 				35AA860B1BA0A168004DA80D /* Assets.xcassets */,
 				35AA860D1BA0A168004DA80D /* LaunchScreen.storyboard */,
 				35AA86101BA0A168004DA80D /* Info.plist */,
-				35AA86081BA0A168004DA80D /* CoreDataTest.xcdatamodeld */,
-				35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */,
-				35AA86171BA0A20E004DA80D /* User.swift */,
-				35F31F791BA0F04400B8CCA5 /* DataSource.swift */,
-				35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */,
 			);
 			path = CoreDataTest;
 			sourceTree = "<group>";
@@ -316,6 +316,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0650EDE81BA1E2FA00E83AD4 /* User+CoreDataProperties.swift in Sources */,
+				0650EDE71BA1E2ED00E83AD4 /* CoreDataTest.xcdatamodeld in Sources */,
+				0650EDEA1BA1E30900E83AD4 /* DataSource.swift in Sources */,
+				0650EDEB1BA1E31100E83AD4 /* CoreDataManager.swift in Sources */,
+				0650EDE91BA1E30100E83AD4 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,12 +336,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35F31F7A1BA0F04400B8CCA5 /* DataSource.swift in Sources */,
-				35AA861B1BA0A3EE004DA80D /* CoreDataManager.swift in Sources */,
 				35AA86041BA0A168004DA80D /* ViewController.swift in Sources */,
-				35AA860A1BA0A168004DA80D /* CoreDataTest.xcdatamodeld in Sources */,
-				35AA86181BA0A20E004DA80D /* User+CoreDataProperties.swift in Sources */,
-				35AA86191BA0A20E004DA80D /* User.swift in Sources */,
 				35AA86021BA0A168004DA80D /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -535,6 +535,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = CoreDataTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -548,6 +549,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = CoreDataTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -602,7 +604,8 @@
 				35AA86091BA0A168004DA80D /* CoreDataTest.xcdatamodel */,
 			);
 			currentVersion = 35AA86091BA0A168004DA80D /* CoreDataTest.xcdatamodel */;
-			path = CoreDataTest.xcdatamodeld;
+			name = CoreDataTest.xcdatamodeld;
+			path = ../CoreDataTest/CoreDataTest.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
