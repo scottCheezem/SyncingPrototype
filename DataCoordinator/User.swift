@@ -9,9 +9,11 @@
 import Foundation
 import CoreData
 
-@objc
 public class User: NSManagedObject, Updateable {
     
+    /**
+    Init method that allows a user to be created though User()
+    */
     convenience init() {
         self.init(context: CoreDataManager.shared.managedObjectContext, name: "User")
         clientCreatedAt = NSDate()
