@@ -11,34 +11,41 @@ import Alamofire
 
 
 
-protocol APIClass {
+public protocol APIClass {
     func populateWithJson(jsonDict : NSDictionary)
     func jsonRepresentation() -> NSDictionary
     var apiEndPointForClass : String{ get set }
 }
 
 
-class APIClient: NSObject {
+public class APIClient: NSObject {
 
+    public init(aBaseUrl:String){
+        self.baseUrl = aBaseUrl
+    }
     
-    let baseUrl: String = ""
     
+    public var baseUrl : String = ""
     //should AnyClass be SyncableModel
-    func getDataForClass(aClass : APIClass) -> NSArray {
-        return []
+    public func getDataForClass(aClass : APIClass, params:[String: AnyObject]? = nil, completionHandler:((success: Bool, results:[NSDictionary], error:Error?) -> Void)?) {
+        Alamofire.request(.GET, self.baseUrl+aClass.apiEndPointForClass, parameters:params, encoding:.JSON).responseJSON() {
+            (request, response, data) in
+            
+        }
+
     }
     
-    func postDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
-        return []
-    }
-    
-    func putDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
-        return []
-    }
-    
-    func deleteDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
-        return []
-    }
+//    public func postDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
+//        return []
+//    }
+//    
+//    public func putDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
+//        return []
+//    }
+//    
+//    public func deleteDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
+//        return []
+//    }
     
     
 }

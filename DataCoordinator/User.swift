@@ -9,8 +9,19 @@
 import Foundation
 import CoreData
 
-public class User: NSManagedObject {
+public class User: NSManagedObject,APIClass {
 
 // Insert code here to add functionality to your managed object subclass
+    
+    
+    public func populateWithJson(jsonDict: NSDictionary) {
+        
+    }
+    
+    public func jsonRepresentation() -> NSDictionary {
+        return [:]
+    }
+    
+    public var apiEndPointForClass :String = "user"
 
 }
