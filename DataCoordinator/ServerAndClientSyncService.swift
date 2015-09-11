@@ -51,8 +51,15 @@ class ServerAndClientSyncService {
 
     //MARK: Initializers
     
-    /*
-        Main initialzer that is used to set the dataSource, networkService and syncableClasses properties.
+    /**
+    Main Initiailizer for the ServerAndClientSyncService Class
+    
+    - parameter dataSource:        Class that the sync service will use to interact with data stored on the device.
+    - parameter networkService:    Class that the sync service will use to interact with the data stored on the server.
+    - parameter syncableClasses:   Dictionary of classes that can be updated on either the client or the server and that must be synced between the two.
+    - parameter updateableClasses: Dictionary of classes that will only be created on the client but will need to be sent to the server.
+    
+    - returns: Instance of ServerAndClientSyncService.
     */
     init(withDataSource  dataSource : SyncingDataSource, networkService : SyncingNetworkService, syncableClasses : [ String : AnyClass ], andUpdateableClasses  updateableClasses: [String : AnyClass]) {
         self.dataSource = dataSource
@@ -71,17 +78,21 @@ class ServerAndClientSyncService {
         self.updateableClasses = combinedUpdateableArray
     }
     
-    //MARK: Internal Methods
+    //MARK: Internal Facing Methods
     
-    /*
-        Event method that handles new objects being received from the server.
+    /**
+    Method that should be called when the client has recieved new objects that are syncable.
+    
+    - parameter objects: New objects from the server that need to be persisted on the client/
     */
     internal func newObjectsReceivedFromServer(objects : [Syncable]) {
         
     }
     
-    /*
-        Sends all objects to the server that need to be synced.
+    /**
+    Sends all objects that are on the client, but need to be sent to the server.
+    
+    - parameter completion: Block to performed upon successful completion of the sending the objects.
     */
     internal func sendNotFullySyncedObjectsToServerWithCompletion(completion : (succeeded : Bool) -> Void) {
         let allObjectsDictionary = getAllObjectsOfEachUpdateableClass()
@@ -89,8 +100,10 @@ class ServerAndClientSyncService {
         postAllObjectsToTheServer(notFullySyncedObjectsOfEachClass)
     }
     
-    /*
+    /**
+    Method that will pull down any changes that have been made on the server.
     
+    - parameter completion: Block indicating when the pulled down changes has  been saved.
     */
     internal func updateSyncableClassesFromTheServerWithCompletion(completion : (succeeded : Bool) -> Void) {
         
@@ -98,9 +111,10 @@ class ServerAndClientSyncService {
     
     //MARK: Client Updating Methods
     
-    /*
-        Receives all objects that are persisted to the device in each class that the service is listening to.
-        TODO: Finish
+    /**
+    Gets all objects persisted to the device that are being tracked for updating.
+    
+    - returns: Dictionary containing all updateable objects sorted by their classes.
     */
     private func getAllObjectsOfEachUpdateableClass() -> [String : [Updateable]] {
         
@@ -121,8 +135,10 @@ class ServerAndClientSyncService {
     }
     
     
-    /*
-        Performs the passed in block on each class that is being synced.
+    /**
+    Performs the passed in block for each class that is being tracked for updates.
+    
+    - parameter blockToPerform: Block to execute for each class that is being tracked.
     */
     private func performOperationOnEachUpdateableClass(blockToPerform : (cls : AnyClass, classKey : String) -> Void) {
         for (classKey, cls) in updateableClasses {
@@ -130,8 +146,13 @@ class ServerAndClientSyncService {
         }
     }
     
-    /*
-        Converts an array of AnyObject to an array of objects that can be used as Syncable.
+    /**
+    Converts an array of AnyObects to an Array of Updateable objects as long as the objects conform to the
+    updateable protocol
+    
+    - parameter anyObjectArray: original Array that needs to be converted
+    
+    - returns: Objects in the original array, but casted as Updateable.
     */
     private func convertAnyObjectArrayToUpdateableArray(anyObjectArray : [AnyObject]) -> [Updateable] {
         let syncableObjects = anyObjectArray.map { updateableObject in
@@ -141,8 +162,12 @@ class ServerAndClientSyncService {
         return syncableObjects
     }
     
-    /*
-        Filters arrays of Syncable objects down to the objects that have not yet been synced to the server.
+    /**
+    Filters out all objects that are only fully updated on the client.
+    
+    - parameter dictionary: Dictionary to filter objects that need to be synced.
+    
+    - returns: Filtered dictionary containing only objects that need to be sent to the server.
     */
     private func filterNotFullySyncedObjectsOutOfDictionary(dictionary : [String : [Updateable]]) -> [String : [Updateable]] {
         
@@ -169,8 +194,10 @@ class ServerAndClientSyncService {
     
     //MARK: Server Updating Methods
     
-    /*
-    Performs the passed in block on each class that is being synced.
+    /**
+    Performs the passed in block for each class that is being tracked for syncing.
+    
+    - parameter blockToPerform: Block to execute for each class that is being tracked.
     */
     private func performOperationOnEachSyncableClass(blockToPerform : (cls : AnyClass, classKey : String) -> Void) {
         for (classKey, cls) in syncableClasses {
