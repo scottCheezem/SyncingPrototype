@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @objc
-public class User: NSManagedObject, Syncable {
+public class User: NSManagedObject, Updateable {
     
     convenience init() {
         self.init(context: CoreDataManager.shared.managedObjectContext, name: "User")
