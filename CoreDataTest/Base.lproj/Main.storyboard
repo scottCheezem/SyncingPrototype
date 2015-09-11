@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8187.4" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8151.3"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -18,8 +19,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9PA-sK-f2W">
-                                <rect key="frame" x="277" y="40" width="46" height="30"/>
-                                <state key="normal" title="Button">
+                                <rect key="frame" x="285" y="40" width="30" height="30"/>
+                                <state key="normal" title="Add">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -35,19 +36,37 @@
                                         <rect key="frame" x="0.0" y="28" width="560" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Kbd-ED-SQW" id="V5F-5G-NKC">
-                                            <rect key="frame" x="0.0" y="0.0" width="560" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="560" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="frm-Re-1hH">
+                                <rect key="frame" x="549" y="40" width="39" height="30"/>
+                                <state key="normal" title="Reset"/>
+                                <connections>
+                                    <action selector="resetButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="X4F-7X-Maf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WxD-1u-U2n">
+                                <rect key="frame" x="28" y="40" width="39" height="30"/>
+                                <state key="normal" title="Clean"/>
+                                <connections>
+                                    <action selector="cleanButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jqu-UJ-X3a"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="Q60-7I-Fq1" secondAttribute="trailing" id="7pQ-pd-Nfc"/>
+                            <constraint firstItem="frm-Re-1hH" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" constant="8" id="DAi-OS-6Sl"/>
+                            <constraint firstItem="WxD-1u-U2n" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="8" id="KP0-bo-2Sr"/>
+                            <constraint firstItem="WxD-1u-U2n" firstAttribute="centerY" secondItem="9PA-sK-f2W" secondAttribute="centerY" id="Knn-Lv-Twp"/>
                             <constraint firstItem="Q60-7I-Fq1" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="fPJ-XB-6Vp"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Q60-7I-Fq1" secondAttribute="bottom" id="gaQ-UT-Wfw"/>
                             <constraint firstAttribute="centerX" secondItem="9PA-sK-f2W" secondAttribute="centerX" id="hVZ-Ej-Nvn"/>
+                            <constraint firstItem="frm-Re-1hH" firstAttribute="centerY" secondItem="9PA-sK-f2W" secondAttribute="centerY" id="hmk-q3-10N"/>
                             <constraint firstAttribute="centerY" secondItem="9PA-sK-f2W" secondAttribute="centerY" id="kAl-qF-Muk"/>
                             <constraint firstItem="Q60-7I-Fq1" firstAttribute="top" secondItem="9PA-sK-f2W" secondAttribute="bottom" constant="20" id="kFy-Yz-pw8"/>
                             <constraint firstItem="9PA-sK-f2W" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="n2y-ZS-3Xm"/>

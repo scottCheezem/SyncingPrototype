@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import CoreData
+import CoreData
 import DataCoordinator
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -48,16 +48,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        DataSource.sharedInstance.deleteObjects([users[indexPath.row]])
-        getUsers()
+        DataSource.sharedInstance.deleteObjects([users[indexPath.row]]) { (finished) -> Void in
+            self.getUsers()
+        }
     }
 
     @IBAction func buttonPressed(sender: AnyObject) {
         let newUser: User = NSEntityDescription.insertNewObjectForEntityForName("User", inManagedObjectContext: CoreDataManager.shared.managedObjectContext) as! User
         newUser.firstName = "Adam"
-        DataSource.sharedInstance.saveObjects([newUser])
-        getUsers()
+        DataSource.sharedInstance.saveObjects([newUser]) { (success) -> Void in
+            self.getUsers()
+        }
     }
 
+    @IBAction func resetButtonPressed(sender: AnyObject) {
+        DataSource.sharedInstance.resetCoreData()
+    }
+    
+    @IBAction func cleanButtonPressed(sender: AnyObject) {
+        DataSource.sharedInstance.cleanCoreData { (success) -> Void in
+            self.getUsers()
+        }
+    }
 }
 
