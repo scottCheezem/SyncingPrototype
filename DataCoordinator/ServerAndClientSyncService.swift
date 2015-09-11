@@ -126,4 +126,19 @@ class ServerAndClientSyncService {
     private func convertObjectsInDictionaryArraysToJSONDictionaries(dictionary : [String : [Syncable]]) -> [String : [[String : AnyObject]]] {
         return [String : [[String : AnyObject]]]()
     }
+    
+    /*
+    Performs the passed in block on each class that is being synced.
+    */
+    private func performOperationOnEachSyncableClass(blockToPerform : (cls : AnyClass, classKey : String) -> Void) {
+        for (classKey, cls) in syncableClasses {
+            blockToPerform(cls: cls, classKey: classKey)
+        }
+    }
+    
+    private func postAllObjectsToTheServer(allObjects : [String : [[String : AnyObject]]]) {
+        performOperationOnEachSyncableClass { cls, classKey in
+            
+        }
+    }
 }
