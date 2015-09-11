@@ -42,9 +42,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell")
-        cell?.textLabel?.text = users[indexPath.row].firstName as String!
-        return cell!
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "hh:mm"
+        let dateString = dateFormatter.stringFromDate(users[indexPath.row].clientCreatedAt)
+        cell.textLabel!.text = dateString
+        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -54,7 +57,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 
     @IBAction func buttonPressed(sender: AnyObject) {
-        let newUser: User = NSEntityDescription.insertNewObjectForEntityForName("User", inManagedObjectContext: CoreDataManager.shared.managedObjectContext) as! User
+        let newUser: User = User()
         newUser.firstName = "Adam"
         DataSource.sharedInstance.saveObjects([newUser]) { (success) -> Void in
             self.getUsers()

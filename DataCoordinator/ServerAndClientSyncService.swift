@@ -52,6 +52,6 @@ class ServerAndClientSyncService {
     }
     
     private func convertObjectsInDictionaryArraysToJSONDictionaries(dictionary : [String : [Syncable]]) -> [String : [[String : AnyObject]]] {
-        return [String : [[String : AnyObject]]]
+        return [String : [[String : AnyObject]]]()
     }
 }

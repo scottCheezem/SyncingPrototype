@@ -10,8 +10,8 @@ import Foundation
 
 protocol Syncable {
     
-    var serverUpdatedAt : NSDate {get set}
-    var clientUpdatedAt : NSDate {get set}
+    var serverUpdatedAt : NSDate { get set }
+    var clientUpdatedAt : NSDate { get set }
     
     var serverCreatedAt : NSDate { get set }
     var clientCreatedAt : NSDate { get set }
