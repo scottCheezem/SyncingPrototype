@@ -20,6 +20,8 @@
 		0650EE061BA1E7D300E83AD4 /* DataCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0650EE051BA1E7D300E83AD4 /* DataCoordinator.swift */; };
 		0650EE101BA2123700E83AD4 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0650EE0F1BA2123700E83AD4 /* APIClient.swift */; };
 		0650EE131BA2138000E83AD4 /* CoreDataTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0650EE111BA2138000E83AD4 /* CoreDataTest.xcdatamodeld */; };
+		350581711BA3778400E7A035 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDF51BA1E36A00E83AD4 /* Alamofire.framework */; };
+		350581721BA3778400E7A035 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDF51BA1E36A00E83AD4 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		35AA86021BA0A168004DA80D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86011BA0A168004DA80D /* AppDelegate.swift */; };
 		35AA86041BA0A168004DA80D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86031BA0A168004DA80D /* ViewController.swift */; };
 		35AA86071BA0A168004DA80D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35AA86051BA0A168004DA80D /* Main.storyboard */; };
@@ -90,6 +92,13 @@
 			remoteGlobalIDString = F829C6B21A7A94F100A2CD59;
 			remoteInfo = "Alamofire OSX Tests";
 		};
+		350581731BA3778400E7A035 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0650EDEC1BA1E36A00E83AD4 /* Alamofire.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F8111E3219A95C8B0040E7D1;
+			remoteInfo = "Alamofire iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -100,6 +109,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				0650EDDD1BA1E0EE00E83AD4 /* DataCoordinator.framework in Embed Frameworks */,
+				350581721BA3778400E7A035 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -156,6 +166,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0650EDDC1BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */,
+				350581711BA3778400E7A035 /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -300,6 +311,7 @@
 			);
 			dependencies = (
 				0650EDDB1BA1E0EE00E83AD4 /* PBXTargetDependency */,
+				350581741BA3778400E7A035 /* PBXTargetDependency */,
 			);
 			name = CoreDataTest;
 			productName = CoreDataTest;
@@ -475,6 +487,11 @@
 			isa = PBXTargetDependency;
 			target = 0650EDC61BA1E0EE00E83AD4 /* DataCoordinator */;
 			targetProxy = 0650EDDA1BA1E0EE00E83AD4 /* PBXContainerItemProxy */;
+		};
+		350581741BA3778400E7A035 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Alamofire iOS";
+			targetProxy = 350581731BA3778400E7A035 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
