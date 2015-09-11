@@ -131,6 +131,7 @@
 		0650EE051BA1E7D300E83AD4 /* DataCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataCoordinator.swift; sourceTree = "<group>"; };
 		0650EE0F1BA2123700E83AD4 /* APIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		0650EE121BA2138000E83AD4 /* CoreDataTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataTest.xcdatamodel; sourceTree = "<group>"; };
+		0650EE1D1BA312DC00E83AD4 /* SyncingPrototypePlayGround.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = SyncingPrototypePlayGround.playground; sourceTree = "<group>"; };
 		35AA85FE1BA0A168004DA80D /* CoreDataTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CoreDataTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35AA86011BA0A168004DA80D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		35AA86031BA0A168004DA80D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -214,6 +215,7 @@
 		35AA85F51BA0A168004DA80D = {
 			isa = PBXGroup;
 			children = (
+				0650EE1D1BA312DC00E83AD4 /* SyncingPrototypePlayGround.playground */,
 				0650EDEC1BA1E36A00E83AD4 /* Alamofire.xcodeproj */,
 				0650EDE51BA1E10900E83AD4 /* CoreData.framework */,
 				35AA86001BA0A168004DA80D /* CoreDataTest */,
