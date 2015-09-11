@@ -79,6 +79,7 @@ class ServerAndClientSyncService {
     private func getAllObjectsOfEachSyncableClass() -> [String : [Syncable]] {
         
         var allObjectsDictionary = [String : [Syncable]]()
+        
         performOperationOnEachSyncableClass { [weak self] cls, classKey in
             let allObjectsInClass = self!.dataSource.allObjectsOfClass(cls)
             

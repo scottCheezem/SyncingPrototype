@@ -8,13 +8,16 @@
 
 import Foundation
 
-protocol Syncable {
+
+protocol Updateable {
+    
+    var clientCreatedAt : NSDate { get set }
+    var isFullySynced : Bool { get set }
+}
+
+protocol Syncable: Updateable {
     
     var serverUpdatedAt : NSDate {get set}
     var clientUpdatedAt : NSDate {get set}
-    
     var serverCreatedAt : NSDate { get set }
-    var clientCreatedAt : NSDate { get set }
-    
-    var isFullySynced : Bool { get set }
 }
