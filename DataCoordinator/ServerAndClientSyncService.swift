@@ -21,9 +21,9 @@ class ServerAndClientSyncService {
     
     private let dataSource : SyncingDataSource
     private let networkService : SyncingNetworkService
-    private let syncableClasses : [AnyClass]
+    private let syncableClasses : [ String : AnyClass ]
     
-    init(withDataSource  dataSource : SyncingDataSource, networkService : SyncingNetworkService, andSyncableClasses syncableClasses : [AnyClass]) {
+    init(withDataSource  dataSource : SyncingDataSource, networkService : SyncingNetworkService, andSyncableClasses syncableClasses : [ String : AnyClass ]) {
         self.dataSource = dataSource
         self.networkService = networkService
         self.syncableClasses = syncableClasses
@@ -35,7 +35,7 @@ class ServerAndClientSyncService {
     
     internal func sendNotFullySyncedObjectsToServerWithCompletion(completion : (succeeded : Bool) -> Void) {
         let allObjectsDictionary = getAllObjectsOfEachSyncableClass()
-        let notFullySyncedObjectsOfEachClass = filterNotFullySyncedObjectsOutOfSyncableArrays(allObjectsDictionary)
+        let notFullySyncedObjectsOfEachClass = filterNotFullySyncedObjectsOutOfDictionary(allObjectsDictionary)
         let objectsToSendToServerAsJSONDictionaries = convertObjectsInDictionaryArraysToJSONDictionaries(notFullySyncedObjectsOfEachClass)
     }
     
@@ -43,15 +43,15 @@ class ServerAndClientSyncService {
         
     }
     
-    private func getAllObjectsOfEachSyncableClass() -> [AnyClass : [Syncable]] {
-        
+    private func getAllObjectsOfEachSyncableClass() -> [String : [Syncable]] {
+        return [String : [Syncable]]()
     }
     
-    private func filterNotFullySyncedObjectsOutOfDictionary(dictionary : [AnyClass : [Syncable]]) -> [AnyClass : [Syncable]] {
-        
+    private func filterNotFullySyncedObjectsOutOfDictionary(dictionary : [String : [Syncable]]) -> [String : [Syncable]] {
+        return [String : [Syncable]]()
     }
     
-    private func convertObjectsInDictionaryArraysToJSONDictionaries(dictionary : [AnyClass : [Syncable]]) -> [AnyClass : [[String : AnyObject]] {
-    
+    private func convertObjectsInDictionaryArraysToJSONDictionaries(dictionary : [String : [Syncable]]) -> [String : [[String : AnyObject]]] {
+        return [String : [[String : AnyObject]]]
     }
 }

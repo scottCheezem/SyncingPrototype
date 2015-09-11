@@ -16,5 +16,5 @@ protocol Syncable {
     var serverCreatedAt : NSDate { get set }
     var clientCreatedAt : NSDate { get set }
     
-    var isFullySynced : Bool
+    var isFullySynced : Bool { get set }
 }
