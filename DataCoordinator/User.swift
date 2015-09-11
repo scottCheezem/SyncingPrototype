@@ -9,8 +9,19 @@
 import Foundation
 import CoreData
 
-public class User: NSManagedObject {
-
-// Insert code here to add functionality to your managed object subclass
-
+@objc
+public class User: NSManagedObject, Updateable {
+    
+    convenience init() {
+        self.init(context: CoreDataManager.shared.managedObjectContext, name: "User")
+        clientCreatedAt = NSDate()
+    }
+ 
+    @NSManaged public var firstName: String?
+    
+    @NSManaged public var serverUpdatedAt : NSDate
+    @NSManaged public var clientUpdatedAt : NSDate
+    @NSManaged public var serverCreatedAt : NSDate
+    @NSManaged public var clientCreatedAt : NSDate
+    @NSManaged public var isFullySynced: Bool
 }

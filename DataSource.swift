@@ -14,7 +14,7 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     
     public static let sharedInstance = DataSource()
     
-    override init () {        
+    override init () {
         let userFetchRequest = NSFetchRequest(entityName: "User")
         let sortDescriptor = NSSortDescriptor(key: "firstName", ascending: false)
         userFetchRequest.sortDescriptors = [sortDescriptor]
@@ -23,7 +23,7 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
             userFetchedResultsController = NSFetchedResultsController(fetchRequest: userFetchRequest, managedObjectContext: CoreDataManager.shared.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         }
         super.init()
-
+        
         performFetch()
     }
     
@@ -35,6 +35,12 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     }
     
     public func saveObjects(objects: [AnyObject], completionHandler:(success: Bool) -> Void) -> () {
+        for object in objects {
+            if object.isKindOfClass(User) {
+                let user = object as! User
+                user.clientUpdatedAt = NSDate()
+            }
+        }
         CoreDataManager.shared.save { (success) -> Void in
             self.performFetch()
             completionHandler(success: success)
@@ -83,4 +89,6 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
             print(error.description)
         }
     }
+    
+    
 }

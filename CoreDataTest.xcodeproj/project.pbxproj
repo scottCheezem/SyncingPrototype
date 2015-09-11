@@ -13,7 +13,6 @@
 		0650EDDC1BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; };
 		0650EDDD1BA1E0EE00E83AD4 /* DataCoordinator.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0650EDE61BA1E10900E83AD4 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDE51BA1E10900E83AD4 /* CoreData.framework */; };
-		0650EDE81BA1E2FA00E83AD4 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */; };
 		0650EDE91BA1E30100E83AD4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA86171BA0A20E004DA80D /* User.swift */; };
 		0650EDEA1BA1E30900E83AD4 /* DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F791BA0F04400B8CCA5 /* DataSource.swift */; };
 		0650EDEB1BA1E31100E83AD4 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */; };
@@ -26,6 +25,8 @@
 		35AA86071BA0A168004DA80D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35AA86051BA0A168004DA80D /* Main.storyboard */; };
 		35AA860C1BA0A168004DA80D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35AA860B1BA0A168004DA80D /* Assets.xcassets */; };
 		35AA860F1BA0A168004DA80D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35AA860D1BA0A168004DA80D /* LaunchScreen.storyboard */; };
+		35F31F911BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */; settings = {ASSET_TAGS = (); }; };
+		35F31F921BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */; settings = {ASSET_TAGS = (); }; };
 		C8C2CFA11BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */; settings = {ASSET_TAGS = (); }; };
 		C8C2CFA21BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */; settings = {ASSET_TAGS = (); }; };
 		C8C2CFA91BA212990052F0C1 /* PersistenceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA81BA212990052F0C1 /* PersistenceProtocols.swift */; settings = {ASSET_TAGS = (); }; };
@@ -124,10 +125,10 @@
 		35AA860B1BA0A168004DA80D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35AA860E1BA0A168004DA80D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35AA86101BA0A168004DA80D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		35AA86171BA0A20E004DA80D /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		35F31F791BA0F04400B8CCA5 /* DataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DataSource.swift; path = ../DataSource.swift; sourceTree = "<group>"; };
+		35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extension.swift"; sourceTree = "<group>"; };
 		C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAndClientSyncService.swift; sourceTree = "<group>"; };
 		C8C2CFA81BA212990052F0C1 /* PersistenceProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -168,13 +169,13 @@
 				35AA861A1BA0A3ED004DA80D /* CoreDataManager.swift */,
 				35F31F791BA0F04400B8CCA5 /* DataSource.swift */,
 				35AA86171BA0A20E004DA80D /* User.swift */,
-				35AA86161BA0A20E004DA80D /* User+CoreDataProperties.swift */,
 				0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */,
 				0650EDCB1BA1E0EE00E83AD4 /* Info.plist */,
 				0650EE051BA1E7D300E83AD4 /* DataCoordinator.swift */,
 				C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */,
 				C8C2CFA81BA212990052F0C1 /* PersistenceProtocols.swift */,
 				0650EE0F1BA2123700E83AD4 /* APIClient.swift */,
+				35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */,
 			);
 			path = DataCoordinator;
 			sourceTree = "<group>";
@@ -425,10 +426,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35F31F911BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */,
 				0650EE061BA1E7D300E83AD4 /* DataCoordinator.swift in Sources */,
 				0650EE131BA2138000E83AD4 /* CoreDataTest.xcdatamodeld in Sources */,
 				0650EE101BA2123700E83AD4 /* APIClient.swift in Sources */,
-				0650EDE81BA1E2FA00E83AD4 /* User+CoreDataProperties.swift in Sources */,
 				C8C2CFA91BA212990052F0C1 /* PersistenceProtocols.swift in Sources */,
 				C8C2CFA11BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */,
 				0650EDEA1BA1E30900E83AD4 /* DataSource.swift in Sources */,
@@ -444,6 +445,7 @@
 				C8C2CFA21BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */,
 				0650EDD81BA1E0EE00E83AD4 /* DataCoordinatorTests.swift in Sources */,
 				C8C2CFAA1BA212990052F0C1 /* PersistenceProtocols.swift in Sources */,
+				35F31F921BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,7 +17,8 @@ protocol Updateable {
 
 protocol Syncable: Updateable {
     
-    var serverUpdatedAt : NSDate {get set}
-    var clientUpdatedAt : NSDate {get set}
+    var serverUpdatedAt : NSDate { get set }
+    var clientUpdatedAt : NSDate { get set }
+    
     var serverCreatedAt : NSDate { get set }
 }
