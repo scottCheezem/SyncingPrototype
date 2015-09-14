@@ -9,7 +9,7 @@
 import Foundation
 
 
-protocol Updateable {
+protocol Updateable: APIClass {
     
     var clientCreatedAt : NSDate { get set }
     var isFullySynced : Bool { get set }
