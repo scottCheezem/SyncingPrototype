@@ -98,16 +98,22 @@ public class CoreDataManager: NSObject {
         userFetchRequest.includesPropertyValues = false // only managedObjectID
         
         var users = [User]()
-        do {
-            users = try managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
-        } catch let error as NSError {
-            completionHandler(success: false)
-            print("An error has occurred while fetching " + error.description)
+
+        managedObjectContext.performBlockAndWait { () -> Void in
+            do {
+                users = try self.managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
+            } catch let error as NSError {
+                completionHandler(success: false)
+                print("An error has occurred while fetching " + error.description)
+            }
         }
         
-        for user in users {
-            managedObjectContext.deleteObject(user)
+        managedObjectContext.performBlockAndWait { () -> Void in
+            for user in users {
+                self.managedObjectContext.deleteObject(user)
+            }
         }
+
         save { (finished) -> Void in
             completionHandler(success: true)
             print("Core data database has been successfully cleaned");
@@ -203,7 +209,9 @@ public class CoreDataManager: NSObject {
     - parameter completionHandler: Passes a finished bool.
     */
     func deleteEntity(object:NSManagedObject, completionHandler:(finished: Bool) -> Void) -> () {
-        object.managedObjectContext!.deleteObject(object)
+        object.managedObjectContext!.performBlockAndWait { () -> Void in
+            object.managedObjectContext!.deleteObject(object)
+        }
         save { (finished) -> Void in
             completionHandler(finished: finished)
         }
