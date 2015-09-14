@@ -50,16 +50,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        DataSource.sharedInstance.deleteObjects([users[indexPath.row]]) { (finished) -> Void in
-            self.getUsers()
+        if DataSource.sharedInstance.deleteObjects([users[indexPath.row]]) {
+            getUsers()
         }
     }
 
     @IBAction func buttonPressed(sender: AnyObject) {
         let newUser: User = User()
         newUser.firstName = "Adam"
-        DataSource.sharedInstance.saveObjects([newUser]) { (success) -> Void in
-            self.getUsers()
+        if DataSource.sharedInstance.saveObjects([newUser]) {
+            getUsers()
         }
     }
 
@@ -68,8 +68,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     @IBAction func cleanButtonPressed(sender: AnyObject) {
-        DataSource.sharedInstance.cleanCoreData { (success) -> Void in
-            self.getUsers()
+        if DataSource.sharedInstance.cleanCoreData() {
+            getUsers()
         }
     }
 }
