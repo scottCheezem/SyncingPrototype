@@ -8,9 +8,9 @@
 
 import CoreData
 
-public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
+public class DataSource: NSObject, NSFetchedResultsControllerDelegate {
 
-    private var userFetchedResultsController : NSFetchedResultsController?
+    private var userFetchedResultsController: NSFetchedResultsController?
     
     public static let sharedInstance = DataSource()
     
@@ -30,12 +30,14 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     /**
     The function to use when needing to save the context.
     
-    - parameter completionHandler: Passes a success bool.
+    - returns: returns if the operation was successful.
     */
-    public func save(completionHandler:(success: Bool) -> Void) -> () {
-        CoreDataManager.shared.save { (success) -> Void in
+    public func save() -> Bool {
+        if CoreDataManager.shared.save() {
             self.performFetch()
-            completionHandler(success: success)
+            return true
+        } else {
+            return false
         }
     }
     
@@ -43,18 +45,20 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     The function to use when needing to save one or more objects into core data.
     
     - parameter objects:           The objects to save.
-    - parameter completionHandler: Passes a success bool.
+    - returns: returns if the operation was successful.
     */
-    public func saveObjects(objects: [AnyObject], completionHandler:(success: Bool) -> Void) -> () {
+    public func saveObjects(objects: [AnyObject]) -> Bool {
         for object in objects {
             if object.isKindOfClass(User) {
                 let user = object as! User
                 user.clientUpdatedAt = NSDate()
             }
         }
-        CoreDataManager.shared.save { (success) -> Void in
+        if CoreDataManager.shared.save() {
             self.performFetch()
-            completionHandler(success: success)
+            return true
+        } else {
+            return false
         }
     }
     
@@ -62,15 +66,15 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     The function to use when needing to delete an object from core data.
     
     - parameter objects:           The objects to delete
-    - parameter completionHandler: Passes a success bool.
+    - returns: returns if the operation was successful.
     */
-    public func deleteObjects(objects: [AnyObject], completionHandler:(finished: Bool) -> Void) -> () {
-        for object in objects {
-            CoreDataManager.shared.deleteEntity(object as! User, completionHandler: { (finished) -> Void in
-                self.performFetch()
-            })
+    public func deleteObjects(objects: [NSManagedObject]) -> Bool {
+        if CoreDataManager.shared.deleteObjects(objects) {
+            performFetch()
+            return true
+        } else {
+            return false
         }
-        completionHandler(finished: true)
     }
     
     /**
@@ -90,12 +94,14 @@ public class DataSource : NSObject, NSFetchedResultsControllerDelegate {
     /**
     This is the function to use when wiping core data objects.  This deletes all objects from core data.
     
-    - parameter completionHandler: Passes a success bool.
+    - returns: returns if the operation was successful.
     */
-    public func cleanCoreData(completionHandler:(success: Bool) -> Void) -> () {
-        CoreDataManager.shared.cleanCoreData { (success) -> Void in
-            self.performFetch()
-            completionHandler(success: success)
+    public func cleanCoreData() -> Bool {
+        if CoreDataManager.shared.cleanCoreData() {
+            performFetch()
+            return true
+        } else {
+            return false
         }
     }
     

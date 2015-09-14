@@ -89,10 +89,12 @@ public class CoreDataManager: NSObject {
     /**
     This is the function to use when wiping core data objects.  This deletes all objects from core data.
     
-    - parameter completionHandler: Passes a success bool
+    - returns: returns if the operation was successful.
     */
-    func cleanCoreData(completionHandler: (success: Bool) -> Void) -> () {
-        print("Resetting the core data database");
+    func cleanCoreData() -> Bool {
+        print("Cleaning the core data database")
+        
+        var success: Bool = false
         
         let userFetchRequest = NSFetchRequest.init(entityName: "User")
         userFetchRequest.includesPropertyValues = false // only managedObjectID
@@ -102,8 +104,9 @@ public class CoreDataManager: NSObject {
         managedObjectContext.performBlockAndWait { () -> Void in
             do {
                 users = try self.managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
+                success = true
             } catch let error as NSError {
-                completionHandler(success: false)
+                success = false
                 print("An error has occurred while fetching " + error.description)
             }
         }
@@ -113,10 +116,13 @@ public class CoreDataManager: NSObject {
                 self.managedObjectContext.deleteObject(user)
             }
         }
-
-        save { (finished) -> Void in
-            completionHandler(success: true)
-            print("Core data database has been successfully cleaned");
+        
+        if save() && success {
+            print("Core data database has been successfully cleaned")
+            return true
+        } else {
+            print("ERROR: Core data database has not been successfully cleaned")
+            return false
         }
         
 //        iOS 9
@@ -135,14 +141,18 @@ public class CoreDataManager: NSObject {
     This is the function to use when hard killing core data.  This deletes the persistent store files.
     */
     func resetCoreData() {
+        print("Resetting the core data database")
+        var success: Bool = false
         let storesArray = _persistentStoreCoordinator?.persistentStores
         
         if let stores = storesArray {
             for store in stores {
                 do {
                     try NSFileManager.defaultManager().removeItemAtURL((store.URL)!)
+                    success = true
                 } catch let error as NSError {
                     print(error.description)
+                    success = false
                 }
             }
         }
@@ -153,6 +163,13 @@ public class CoreDataManager: NSObject {
         
         // Recreate - TODO check validity
         self.managedObjectContext
+        
+        if success {
+            print("Core data database has been successfully reset")
+        } else {
+            print("ERROR: Core data database has not been successfully reset")
+        }
+        
     }
 
     // #pragma mark - save methods
@@ -160,16 +177,18 @@ public class CoreDataManager: NSObject {
     /**
     This is the function to use when saving core data objects.  This saves the context if it has changes and then saves the parent context if it exists.
     
-    - parameter completionHandler: Passes a success bool
+    - returns: returns if the operation was successful.
     */
-    func save(completionHandler: (success: Bool) -> Void) -> () {
+    func save() -> Bool {
+        var success: Bool = false
         let context:NSManagedObjectContext = self.managedObjectContext;
         if context.hasChanges {
             context.performBlockAndWait{
                 do {
                     try context.save()
+                    success = true
                 } catch let error as NSError {
-                    completionHandler(success: false)
+                    success = false
                     print(error.description)
                 }
                 
@@ -178,14 +197,14 @@ public class CoreDataManager: NSObject {
                         do {
                             try context.parentContext!.save()
                         } catch let error as NSError {
-                            completionHandler(success: false)
+                            success = false
                             print(error.description)
                         }
                     }
                 }
-                completionHandler(success: true)
             }
         }
+        return success
     }
 
     func contextWillSave(notification: NSNotification) {
@@ -205,15 +224,19 @@ public class CoreDataManager: NSObject {
     /**
     This is the function to use when deleting core data objects.
     
-    - parameter object:            The object to delete.
-    - parameter completionHandler: Passes a finished bool.
+    - parameter objects:  The objects to delete.
+    - returns: returns if the operation was successful.
     */
-    func deleteEntity(object:NSManagedObject, completionHandler:(finished: Bool) -> Void) -> () {
-        object.managedObjectContext!.performBlockAndWait { () -> Void in
-            object.managedObjectContext!.deleteObject(object)
+    func deleteObjects(objects: [NSManagedObject]) -> Bool {
+        for object in objects {
+            object.managedObjectContext!.performBlockAndWait { () -> Void in
+                object.managedObjectContext!.deleteObject(object)
+            }
         }
-        save { (finished) -> Void in
-            completionHandler(finished: finished)
+        if save() {
+            return true
+        } else {
+            return false
         }
     }
 
