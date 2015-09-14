@@ -9,12 +9,25 @@
 import Foundation
 import CoreData
 
-public class User: NSManagedObject,APIClass {
+public class User: NSManagedObject, Updateable, APIClass {
+    
+    /**
+    Init method that allows a user to be created though User()
+    */
+    convenience init() {
+        self.init(context: CoreDataManager.shared.managedObjectContext, name: "User")
+        clientCreatedAt = NSDate()
+    }
+ 
+    @NSManaged public var firstName: String?
+    
+    @NSManaged public var serverUpdatedAt : NSDate
+    @NSManaged public var clientUpdatedAt : NSDate
+    @NSManaged public var serverCreatedAt : NSDate
+    @NSManaged public var clientCreatedAt : NSDate
+    @NSManaged public var isFullySynced: Bool
 
-// Insert code here to add functionality to your managed object subclass
-    
-    
-    public func populateWithJson(jsonDict: NSDictionary) {
+public func populateWithJson(jsonDict: NSDictionary) {
         
     }
     

@@ -9,8 +9,5 @@
 import UIKit
 
 public class DataCoordinator: NSObject {
-
-    
-    
-    
+    let syncableClasses : [[String  : AnyClass]] = []
 }
