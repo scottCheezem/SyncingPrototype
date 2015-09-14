@@ -27,11 +27,11 @@ public class APIClient: NSObject {
     public var baseUrl : String = ""
     
     //should AnyClass be SyncableModel
-    public func getDataForClass(aClass : APIClass, params:[String: AnyObject]? = nil, completionHandler:((success: Bool, results:[NSDictionary]) -> Void)?) -> (){
-        Alamofire.request(.GET, self.baseUrl+aClass.apiEndPointForClass, parameters:params).responseJSON { (request, response, result) -> Void in
-//            print("the request:", request)
-//            print(response)
-//            print(result)
+    public func getDataForClass(aClass : APIClass, params:[String: AnyObject]? = nil, completionHandler:((success: Bool, results:[String: AnyObject]) -> Void)?) -> (){
+        Alamofire.request(.GET, self.baseUrl+aClass.apiEndPointForClass, parameters:params).responseJSON { (_, _, result) -> Void in
+            
+            completionHandler?(success: result.isSuccess,results: (result.value as? [String: AnyObject])!)
+            
         }
 
     }
