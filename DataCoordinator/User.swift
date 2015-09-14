@@ -25,7 +25,7 @@ public class User: NSManagedObject, Updateable, APIClass {
     @NSManaged public var clientUpdatedAt : NSDate
     @NSManaged public var serverCreatedAt : NSDate
     @NSManaged public var clientCreatedAt : NSDate
-    @NSManaged public var isFullySynced: Bool
+    @NSManaged public var updatedOnClientAndServer : Bool
 
     public func populateWithJson(jsonDict: NSDictionary) {
         
