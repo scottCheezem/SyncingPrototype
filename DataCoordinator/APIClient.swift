@@ -6,16 +6,11 @@
 //  Copyright © 2015 Beam Technologies. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import Alamofire
 
 
 
-public protocol APIClass {
-    func populateWithJson(jsonDict : NSDictionary)
-    func jsonRepresentation() -> NSDictionary
-    var apiEndPointForClass : String{ get set }
-}
 
 
 public class APIClient: NSObject {
@@ -27,11 +22,12 @@ public class APIClient: NSObject {
     public var baseUrl : String = ""
     
     //should AnyClass be SyncableModel
-    public func getDataForClass(aClass : APIClass, params:[String: AnyObject]? = nil, completionHandler:((success: Bool, results:[String: AnyObject]) -> Void)?) -> (){
-        Alamofire.request(.GET, self.baseUrl+aClass.apiEndPointForClass, parameters:params).responseJSON { (_, _, result) -> Void in
-            
-            completionHandler?(success: result.isSuccess,results: (result.value as? [String: AnyObject])!)
-            
+    public func getDataForClass(classEndPoint : String, params:[String: AnyObject]? = nil, completionHandler:((success: Bool, results:[NSDictionary]) -> Void)?) -> (){
+        Alamofire.request(.GET, self.baseUrl+classEndPoint, parameters:params).responseJSON { (_, _, result) -> Void in
+            //result.value["payload"] as! NSArray
+            let resultPayload = result.value as! [String: AnyObject]
+            let payload = resultPayload["payload"] as! [NSDictionary]
+            completionHandler?(success: result.isSuccess,results: payload)
         }
 
     }
@@ -50,3 +46,5 @@ public class APIClient: NSObject {
     
     
 }
+
+
