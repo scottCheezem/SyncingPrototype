@@ -25,7 +25,7 @@ public class CoreDataManager: NSObject {
         self.managedObjectContext
     }
 
-    // #pragma mark - Core Data stack
+    // MARK: Core Data stack
 
     /// Returns the managed object context.  If the context isn't on the main thread, it tries to get the current threads context.  If there isn't one, it creates one.
     public var managedObjectContext: NSManagedObjectContext {
@@ -86,10 +86,12 @@ public class CoreDataManager: NSObject {
         return _persistentStoreCoordinator!
     }
     
+    // MARK: Utilities
+    
     /**
     This is the function to use when wiping core data objects.  This deletes all objects from core data.
     
-    - returns: returns if the operation was successful.
+    - returns: If the operation was successful.
     */
     func cleanCoreData() -> Bool {
         print("Cleaning the core data database")
@@ -172,12 +174,12 @@ public class CoreDataManager: NSObject {
         
     }
 
-    // #pragma mark - save methods
+    // MARK: Saving
 
     /**
     This is the function to use when saving core data objects.  This saves the context if it has changes and then saves the parent context if it exists.
     
-    - returns: returns if the operation was successful.
+    - returns: If the operation was successful.
     */
     func save() -> Bool {
         var success: Bool = false
@@ -219,13 +221,13 @@ public class CoreDataManager: NSObject {
         }
     }
 
-    // #pragma mark - Utilities
+    // MARK: Deletion
 
     /**
     This is the function to use when deleting core data objects.
     
     - parameter objects:  The objects to delete.
-    - returns: returns if the operation was successful.
+    - returns: If the operation was successful.
     */
     func deleteObjects(objects: [NSManagedObject]) -> Bool {
         for object in objects {
@@ -239,8 +241,29 @@ public class CoreDataManager: NSObject {
             return false
         }
     }
+    
+    // MARK: Fetch
+    
+    /**
+    This is the function to use when requesting core data objects.
+    
+    - parameter request: The fetch request to use
+    
+    - returns: An array of optional core data objects.
+    */
+    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
+        var results: [AnyObject]?
+        self.managedObjectContext.performBlockAndWait {
+            do {
+                results = try self.managedObjectContext.executeFetchRequest(request)
+            } catch let error as NSError {
+                print(error.description)
+            }
+        }
+        return results
+    }
 
-    // #pragma mark - Application's Documents directory
+    // MARK: Application's Documents directory
 
     // Returns the URL to the application's Documents directory.
     var applicationDocumentsDirectory: NSURL {
