@@ -24,8 +24,8 @@ public class APIClient: NSObject {
         self.baseUrl = aBaseUrl
     }
     
-    
     public var baseUrl : String = ""
+    
     //should AnyClass be SyncableModel
     public func getDataForClass(aClass : APIClass, params:[String: AnyObject]? = nil, completionHandler:((success: Bool, results:[NSDictionary]) -> Void)?) -> (){
         Alamofire.request(.GET, self.baseUrl+aClass.apiEndPointForClass, parameters:params).responseJSON { (request, response, result) -> Void in
