@@ -38,7 +38,7 @@ public class CoreDataManager: NSObject {
                 return _managedObjectContext!
             }
         } else {
-            var threadContext : NSManagedObjectContext? = NSThread.currentThread().threadDictionary["NSManagedObjectContext"] as? NSManagedObjectContext;
+            var threadContext : NSManagedObjectContext? = NSThread.currentThread().threadDictionary["NSManagedObjectContext"] as? NSManagedObjectContext
             
             print(NSThread.currentThread().threadDictionary)
             
@@ -54,7 +54,7 @@ public class CoreDataManager: NSObject {
             } else {
                 print("Using old context")
             }
-            return threadContext!;
+            return threadContext!
         }
         return _managedObjectContext!
     }
@@ -131,7 +131,7 @@ public class CoreDataManager: NSObject {
 //        
 //        do {
 //            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
-//            print("Core data database has been successfully cleaned");
+//            print("Core data database has been successfully cleaned")
 //        } catch let error as NSError {
 //            print("An error has occurred while cleaning " + error.description)
 //        }
@@ -181,7 +181,7 @@ public class CoreDataManager: NSObject {
     */
     func save() -> Bool {
         var success: Bool = false
-        let context:NSManagedObjectContext = self.managedObjectContext;
+        let context:NSManagedObjectContext = self.managedObjectContext
         if context.hasChanges {
             context.performBlockAndWait{
                 do {
