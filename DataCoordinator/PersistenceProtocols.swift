@@ -18,13 +18,13 @@ public protocol APIClass {
 //the client code can update
 protocol Updateable: APIClass {
     var clientCreatedAt : NSDate { get set }
-    var isFullySynced : Bool { get set } //this was the dirty property
+    var updatedOnClientAndServer : Bool { get set }
 }
 
 protocol Syncable: Updateable {
     var serverUpdatedAt : NSDate { get set }
     var clientUpdatedAt : NSDate { get set }
-    var serverCreatedAt : NSDate { get set }
+    var serverCreatedAt : NSDate { get set }    
 }
 
 

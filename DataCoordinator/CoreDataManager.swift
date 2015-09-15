@@ -25,7 +25,7 @@ public class CoreDataManager: NSObject {
         self.managedObjectContext
     }
 
-    // #pragma mark - Core Data stack
+    // MARK: Core Data stack
 
     /// Returns the managed object context.  If the context isn't on the main thread, it tries to get the current threads context.  If there isn't one, it creates one.
     public var managedObjectContext: NSManagedObjectContext {
@@ -38,7 +38,7 @@ public class CoreDataManager: NSObject {
                 return _managedObjectContext!
             }
         } else {
-            var threadContext : NSManagedObjectContext? = NSThread.currentThread().threadDictionary["NSManagedObjectContext"] as? NSManagedObjectContext;
+            var threadContext : NSManagedObjectContext? = NSThread.currentThread().threadDictionary["NSManagedObjectContext"] as? NSManagedObjectContext
             
             print(NSThread.currentThread().threadDictionary)
             
@@ -54,7 +54,7 @@ public class CoreDataManager: NSObject {
             } else {
                 print("Using old context")
             }
-            return threadContext!;
+            return threadContext!
         }
         return _managedObjectContext!
     }
@@ -86,31 +86,45 @@ public class CoreDataManager: NSObject {
         return _persistentStoreCoordinator!
     }
     
+    // MARK: Utilities
+    
     /**
     This is the function to use when wiping core data objects.  This deletes all objects from core data.
     
-    - parameter completionHandler: Passes a success bool
+    - returns: If the operation was successful.
     */
-    func cleanCoreData(completionHandler: (success: Bool) -> Void) -> () {
-        print("Resetting the core data database");
+    func cleanCoreData() -> Bool {
+        print("Cleaning the core data database")
+        
+        var success: Bool = false
         
         let userFetchRequest = NSFetchRequest.init(entityName: "User")
         userFetchRequest.includesPropertyValues = false // only managedObjectID
         
         var users = [User]()
-        do {
-            users = try managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
-        } catch let error as NSError {
-            completionHandler(success: false)
-            print("An error has occurred while fetching " + error.description)
+
+        managedObjectContext.performBlockAndWait { () -> Void in
+            do {
+                users = try self.managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
+                success = true
+            } catch let error as NSError {
+                success = false
+                print("An error has occurred while fetching " + error.description)
+            }
         }
         
-        for user in users {
-            managedObjectContext.deleteObject(user)
+        managedObjectContext.performBlockAndWait { () -> Void in
+            for user in users {
+                self.managedObjectContext.deleteObject(user)
+            }
         }
-        save { (finished) -> Void in
-            completionHandler(success: true)
-            print("Core data database has been successfully cleaned");
+        
+        if save() && success {
+            print("Core data database has been successfully cleaned")
+            return true
+        } else {
+            print("ERROR: Core data database has not been successfully cleaned")
+            return false
         }
         
 //        iOS 9
@@ -119,7 +133,7 @@ public class CoreDataManager: NSObject {
 //        
 //        do {
 //            try persistentStoreCoordinator.executeRequest(deleteRequest, withContext: managedObjectContext)
-//            print("Core data database has been successfully cleaned");
+//            print("Core data database has been successfully cleaned")
 //        } catch let error as NSError {
 //            print("An error has occurred while cleaning " + error.description)
 //        }
@@ -129,14 +143,18 @@ public class CoreDataManager: NSObject {
     This is the function to use when hard killing core data.  This deletes the persistent store files.
     */
     func resetCoreData() {
+        print("Resetting the core data database")
+        var success: Bool = true
         let storesArray = _persistentStoreCoordinator?.persistentStores
         
         if let stores = storesArray {
             for store in stores {
                 do {
                     try NSFileManager.defaultManager().removeItemAtURL((store.URL)!)
+                    success = success && true
                 } catch let error as NSError {
                     print(error.description)
+                    success = false
                 }
             }
         }
@@ -147,23 +165,32 @@ public class CoreDataManager: NSObject {
         
         // Recreate - TODO check validity
         self.managedObjectContext
+        
+        if success {
+            print("Core data database has been successfully reset")
+        } else {
+            print("ERROR: Core data database has not been successfully reset")
+        }
+        
     }
 
-    // #pragma mark - save methods
+    // MARK: Saving
 
     /**
     This is the function to use when saving core data objects.  This saves the context if it has changes and then saves the parent context if it exists.
     
-    - parameter completionHandler: Passes a success bool
+    - returns: If the operation was successful.
     */
-    func save(completionHandler: (success: Bool) -> Void) -> () {
-        let context:NSManagedObjectContext = self.managedObjectContext;
+    func save() -> Bool {
+        var success: Bool = false
+        let context:NSManagedObjectContext = self.managedObjectContext
         if context.hasChanges {
             context.performBlockAndWait{
                 do {
                     try context.save()
+                    success = true
                 } catch let error as NSError {
-                    completionHandler(success: false)
+                    success = false
                     print(error.description)
                 }
                 
@@ -172,14 +199,14 @@ public class CoreDataManager: NSObject {
                         do {
                             try context.parentContext!.save()
                         } catch let error as NSError {
-                            completionHandler(success: false)
+                            success = false
                             print(error.description)
                         }
                     }
                 }
-                completionHandler(success: true)
             }
         }
+        return success
     }
 
     func contextWillSave(notification: NSNotification) {
@@ -194,22 +221,49 @@ public class CoreDataManager: NSObject {
         }
     }
 
-    // #pragma mark - Utilities
+    // MARK: Deletion
 
     /**
     This is the function to use when deleting core data objects.
     
-    - parameter object:            The object to delete.
-    - parameter completionHandler: Passes a finished bool.
+    - parameter objects:  The objects to delete.
+    - returns: If the operation was successful.
     */
-    func deleteEntity(object:NSManagedObject, completionHandler:(finished: Bool) -> Void) -> () {
-        object.managedObjectContext!.deleteObject(object)
-        save { (finished) -> Void in
-            completionHandler(finished: finished)
+    func deleteObjects(objects: [NSManagedObject]) -> Bool {
+        for object in objects {
+            object.managedObjectContext!.performBlockAndWait { () -> Void in
+                object.managedObjectContext!.deleteObject(object)
+            }
+        }
+        if save() {
+            return true
+        } else {
+            return false
         }
     }
+    
+    // MARK: Fetch
+    
+    /**
+    This is the function to use when requesting core data objects.
+    
+    - parameter request: The fetch request to use
+    
+    - returns: An array of optional core data objects.
+    */
+    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
+        var results: [AnyObject]?
+        self.managedObjectContext.performBlockAndWait {
+            do {
+                results = try self.managedObjectContext.executeFetchRequest(request)
+            } catch let error as NSError {
+                print(error.description)
+            }
+        }
+        return results
+    }
 
-    // #pragma mark - Application's Documents directory
+    // MARK: Application's Documents directory
 
     // Returns the URL to the application's Documents directory.
     var applicationDocumentsDirectory: NSURL {

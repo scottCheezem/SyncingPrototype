@@ -26,7 +26,7 @@ public class User: NSManagedObject, Syncable {
     @NSManaged public var clientUpdatedAt : NSDate
     @NSManaged public var serverCreatedAt : NSDate
     @NSManaged public var clientCreatedAt : NSDate
-    @NSManaged public var isFullySynced: Bool
+    @NSManaged public var updatedOnClientAndServer : Bool
 
     public func populateWithJson(jsonDict: NSDictionary) {
         firstName = jsonDict["first_name"] as? String
