@@ -11,9 +11,10 @@ import CoreData
 public extension DataCoordinator {
 
     // MARK: User
+    
     public func currentUser() -> User? {
         let currentUserFetchRequest = NSFetchRequest(entityName: "User")
-        let currentUserPredicate = NSPredicate(format: "currentUser = %@", true)
+        let currentUserPredicate = NSPredicate(format: "currentUser == %@", true)
         currentUserFetchRequest.predicate = currentUserPredicate
         if DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first != nil {
             return DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User
@@ -22,10 +23,6 @@ public extension DataCoordinator {
         }
     }
     
-////    public func currentUserInContext(context: NSManagedObjectContext) -> User {
-////        
-////    }
-//
 //    public func currentUserAndConnectedUsers() -> [User]? {
 //        var userAndConnectedUsers = [User]()
 //        let user = currentUser()
@@ -111,9 +108,11 @@ public extension DataCoordinator {
 //            NSNotificationCenter.defaultCenter().postNotificationName(kBTBrushEventHasBeenCreated, object: cdEvents)
 //            deviceToUse.eventReadIndex = latestEvent.eventIndex
 //            deviceToUse.synchronizedAt = NSDate().BT_dateWithAppliedOffsetFromGMT()
-//        } else { // Virtual Event
+//        }
+//        // Virtual Event
+//        else {
 //            if notification.object != nil && !(notification.object!.isKindOfClass(BTBluetoothNotifier.self)) {
-//                //TODO check!!!!
+//                // TODO check!!!!
 //                let objectsArray = notification.object
 //                
 //                let user = objectsArray?.lastObject as! User
@@ -173,5 +172,57 @@ public extension DataCoordinator {
 //    
 //    // MARK: ClientSession
 //    
+//    // MARK: ClientSoftware
 //    
+//    // MARK: Device
+//    
+//    public func fetchObjectsForBTSetupDevices(setupDevices: [BTSetupDevice], completionHandler: (objects: [AnyObject]?) -> Void) -> () {
+//        var macAddresses = [String]()
+//        for device in setupDevices {
+//            macAddresses.append(device.brushData.macAddress)
+//        }
+//
+//        if macAddresses.count == 0 {
+//            print("macAddresses was empty")
+//            completionHandler(objects: nil)
+//        } else {
+//            var devices = Set(macAddresses)
+//            if devices.count == 0 {
+//                completionHandler(objects: Array(devices))
+//            }
+//            // Fetch objects from the server. If something fails, still return
+//            // what we have already fetched out of Core Data.
+//            
+////            else {
+////                // TODO Scott?
+////            }
+//        }
+//    }
+//    
+//    public func createDeviceFromSetupDevice(setupDevice: BTSetupDevice, user: User) -> Device? {
+//        let localUserFetchRequest = NSFetchRequest(entityName: "User")
+//        let localUserPredicate = NSPredicate(format: "userID == %@", user.userID)
+//        localUserFetchRequest.predicate = localUserPredicate
+//        if DataSource.sharedInstance.executeFetchRequest(localUserFetchRequest)?.first != nil {
+//            let localUser = DataSource.sharedInstance.executeFetchRequest(localUserFetchRequest)?.first as? User
+//            let device = Device(setupDevice, user: user)
+//            return device
+//        }
+//        return nil
+//    }
+//    
+//    public func connectedDevices() -> Set<Device>? {
+//        var devices = Set<Device>
+//        if let users = currentUserAndConnectedUsers() {
+//            for user in users {
+//                if user.currentDevice {
+//                    devices.insert(user.currentDevice)
+//                }
+//            }
+//        }
+//        return devices
+//    }
+//    
+//    // MARK: UserShare
+    
 }
