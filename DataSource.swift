@@ -75,6 +75,17 @@ public class DataSource: NSObject {
     }
     
     /**
+    This is the function to use when requesting core data objects.
+    
+    - parameter request: The fetch request to use
+    
+    - returns: An array of optional core data objects.
+    */
+    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
+        return CoreDataManager.shared.executeFetchRequest(request)
+    }
+    
+    /**
     This is the function to use when wiping core data objects.  This deletes all objects from core data.
     
     - returns: If the operation was successful.
