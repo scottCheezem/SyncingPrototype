@@ -15,8 +15,8 @@ import Foundation
     of a ServerAndClientSyncService.
 */
 protocol SyncingDataSource {
-    func saveObjects(objects : [Updateable], completion : (success : Bool) -> Void)
-    func deleteObjects(objects : [Updateable], completion : (success : Bool) -> Void)
+    func saveObjects(objects : [Updateable]) -> Bool
+    func deleteObjects(objects : [Updateable]) -> Bool
     func allObjectsOfClass(cls : AnyClass) -> [AnyObject]?
 }
 
@@ -27,7 +27,7 @@ protocol SyncingDataSource {
     of a ServerAndClientSyncService.
 */
 protocol SyncingNetworkService {
-    func postObjects(objects : [Updateable], withCompletion completion : (objects : [AnyObject]?, error : NSError?) -> Void)
+    func postObjects(objects : [Updateable], withCompletion completion : (objects : [Updateable]?, error : NSError?) -> Void)
 }
 
 //MARK: Syncing Class
@@ -97,10 +97,16 @@ class ServerAndClientSyncService {
     
     - parameter completion: Block to performed upon successful completion of the sending the objects.
     */
-    internal func sendNotFullySyncedObjectsToServerWithCompletion(completion : (succeeded : Bool) -> Void) {
+    internal func sendNotFullySyncedObjectsToServerWithCompletion(completion :() -> Void) {
         let allObjectsDictionary = getAllObjectsOfEachClientUpdateableClass()
         let notFullySyncedObjectsOfEachClass = filterNotFullySyncedObjectsOutOfDictionary(allObjectsDictionary)
-        postAllObjectsToTheServer(notFullySyncedObjectsOfEachClass)
+        
+        networkServiceIsPostingObjectsToServer = true
+        postAllObjectsToTheServer(notFullySyncedObjectsOfEachClass) { [weak self] in
+            guard let weakself = self else { return }
+            weakself.networkServiceIsPostingObjectsToServer = false
+            completion()
+        }
     }
     
     /**
@@ -110,8 +116,10 @@ class ServerAndClientSyncService {
     */
     internal func updateSyncableClassesFromTheServerWithCompletion(completion : (succeeded : Bool) -> Void) {
         
-        for (clsKey, cls) in serverUpdateableClasses {
-            
+        for (_, cls) in serverUpdateableClasses {
+            fetchObjectsOfClassFromTheServer(cls) { objects, error in
+                
+            }
         }
     }
     
@@ -210,11 +218,7 @@ class ServerAndClientSyncService {
     
     - parameter allObjects: Objects that need to be sent to the server.
     */
-    private func postAllObjectsToTheServer(allObjects : [String : [Updateable]]) {
-        
-        guard networkServiceIsPostingObjectsToServer == false else {
-            return
-        }
+    private func postAllObjectsToTheServer(allObjects : [String : [Updateable]], withCompletion completion : (() -> Void)?) {
         
         var numberOfClassesToPost = clientUpdateableClasses.count
         
@@ -236,7 +240,6 @@ class ServerAndClientSyncService {
             
             self.networkService.postObjects(objectsToPost) { [weak self] objects, error in
                 guard let weakself = self else {return}
-                
                 numberOfNetworkCallsCompleted++
                 
                 if error != nil {
@@ -247,15 +250,17 @@ class ServerAndClientSyncService {
                     
                 } else {
                     classesThatUpdatedSuccessfully[clsKey] = objectsToPost
-                    resetAttemptsAtPostingToServerForClassKey(clsKey)
+                    weakself.resetAttemptsAtPostingToServerForClassKey(clsKey)
                 }
                 
-                if numberOfNetworkCallsCompleted == numberOfClassesToPost {
+                if numberOfNetworkCallsCompleted >= numberOfClassesToPost {
                     
                     weakself.processDictionaryWithSuccessfullyUpdatedClasses(classesThatUpdatedSuccessfully)
                     weakself.processDictionariesThatProducedErrors(classesThatProducedErrors) {
                         
-                            weakself.networkServiceIsPostingObjectsToServer = false
+                        if let completion = completion {
+                            completion()
+                        }
                     }
                 }
             }
@@ -303,9 +308,7 @@ class ServerAndClientSyncService {
         }
         
         let updateableFullySyncedObjects = convertSyncableArrayToUpdateableArray(syncableObjectsAsFullySynced)
-        dataSource.saveObjects(updateableFullySyncedObjects) { succeeded in
-            
-        }
+        dataSource.saveObjects(updateableFullySyncedObjects)
     }
     
     /**
@@ -315,13 +318,16 @@ class ServerAndClientSyncService {
     */
     private func handleClientUpdateableObjectsThatWereSuccessfullyUpdatedOnServer(updatedObjects : [Updateable]) {
         
-        self.dataSource.deleteObjects(updatedObjects) { succeeded in
-
-        }
+        self.dataSource.deleteObjects(updatedObjects)
     }
     
     private func processDictionariesThatProducedErrors(failedClasses : [String : [Updateable]], withCompletion  completion : () -> Void) {
-        postAllObjectsToTheServer(failedClasses)
+        guard !failedClasses.isEmpty else {
+            completion()
+            return
+        }
+        
+        postAllObjectsToTheServer(failedClasses, withCompletion: nil)
     }
     
     /**
@@ -348,8 +354,6 @@ class ServerAndClientSyncService {
     }
     
     private func handleNewObjectsReceivedFromServer(objects : Syncable, forClass cls : AnyClass) {
-        self.dataSource.saveObjects(objects) { completion
-            
-        }
+      
     }
 }

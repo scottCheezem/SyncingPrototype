@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Updateable: APIClass {
+protocol Updateable {
     
     var clientCreatedAt : NSDate { get set }
     var updatedOnClientAndServer : Bool { get set }

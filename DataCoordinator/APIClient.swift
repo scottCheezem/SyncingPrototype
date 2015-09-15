@@ -9,8 +9,6 @@
 import UIKit
 import Alamofire
 
-
-
 public protocol APIClass {
     func populateWithJson(jsonDict : NSDictionary)
     func jsonRepresentation() -> NSDictionary
