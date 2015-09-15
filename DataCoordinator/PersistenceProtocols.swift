@@ -31,6 +31,11 @@ protocol Syncable: Updateable {
 
 
 extension NSDate {
+    
+    enum format : String{
+        case rfc3339DateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"
+    }
+    
     var calendar: NSCalendar {
         return NSCalendar(identifier: NSCalendarIdentifierGregorian)!
     }
@@ -54,15 +59,14 @@ extension NSDate {
     func lessThan(date: NSDate) -> Bool {
         return self.compare(date) == NSComparisonResult.OrderedAscending
     }
-    
-    
-    public class func parse(dateString: String, format: String = "yyyy-MM-dd HH:mm:ss") -> NSDate{
+        
+    public class func parse(dateString: String, format: String = format.rfc3339DateFormat.rawValue) -> NSDate{
         let formatter = NSDateFormatter()
         formatter.dateFormat = format
         return formatter.dateFromString(dateString)!
     }
     
-    func toString(format: String = "yyyy-MM-dd HH:mm:ss") -> String{
+    public func toString(format: String = format.rfc3339DateFormat.rawValue) -> String{
         let formatter = NSDateFormatter()
         formatter.dateFormat = format
         return formatter.stringFromDate(self)
