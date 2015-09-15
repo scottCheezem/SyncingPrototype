@@ -9,12 +9,6 @@
 import Foundation
 import Alamofire
 
-public protocol APIClass {
-    func populateWithJson(jsonDict : NSDictionary)
-    func jsonRepresentation() -> NSDictionary
-    var apiEndPointForClass : String{ get set }
-}
-
 public class APIClient: NSObject {
 
     public init(aBaseUrl:String){
