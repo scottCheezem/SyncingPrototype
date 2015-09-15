@@ -35,16 +35,20 @@ public class APIClient: NSObject {
             completionHandler?(success: result.isSuccess, result: result.value!)
         }
     }
-//
-//    public func putDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
-//        return []
-//    }
-//    
-//    public func deleteDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
-//        return []
-//    }
     
+    public func putDataForClass(classEndPoint : String, params:[String: AnyObject], completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
+        Alamofire.request(.PUT, self.baseUrl+classEndPoint, parameters:params).responseJSON {
+            (_, _, result)->Void in
+            completionHandler?(success: result.isSuccess, result: result.value!)
+        }
+    }
     
+    public func deleteDataForClass(classEndPoint : String, params:[String: AnyObject], completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
+        Alamofire.request(.DELETE, self.baseUrl+classEndPoint, parameters:params).responseJSON {
+            (_, _, result)->Void in
+            completionHandler?(success: result.isSuccess, result: result.value!)
+        }
+    }
 }
 
 
