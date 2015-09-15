@@ -29,10 +29,13 @@ public class APIClient: NSObject {
 
     }
     
-//    public func postDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
-//        return []
-//    }
-//    
+    public func postDataForClass(classEndPoint : String, params:[String: AnyObject], completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
+        Alamofire.request(.POST, self.baseUrl+classEndPoint, parameters:params).responseJSON {
+            (_, _, result)->Void in
+            completionHandler?(success: result.isSuccess, result: result.value!)
+        }
+    }
+//
 //    public func putDataForClass(params : NSDictionary, aClass : APIClass) -> NSArray {
 //        return []
 //    }
