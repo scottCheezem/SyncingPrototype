@@ -30,7 +30,11 @@ public class User: NSManagedObject, Syncable {
 
     public func populateWithJson(jsonDict: NSDictionary) {
         firstName = jsonDict["first_name"] as? String
-//        serverCreatedAt = jsonDict["created_at"]
+        let rfc3339DateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"
+        serverCreatedAt = NSDate.parse((jsonDict["created_at"] as? String)!, format: rfc3339DateFormat)
+        serverUpdatedAt = NSDate.parse((jsonDict["updated_at"] as? String)!, format: rfc3339DateFormat)
+        
+        
     }
     
     public func jsonRepresentation() -> NSDictionary {

@@ -27,10 +27,6 @@ protocol Syncable: Updateable {
     var serverCreatedAt : NSDate { get set }
 }
 
-//protocol ClientUpdateable {
-//    var clientCanUpdate : Bool {get set}
-//}
-
 
 
 
@@ -60,7 +56,7 @@ extension NSDate {
     }
     
     
-    class func parse(dateString: String, format: String = "yyyy-MM-dd HH:mm:ss") -> NSDate{
+    public class func parse(dateString: String, format: String = "yyyy-MM-dd HH:mm:ss") -> NSDate{
         let formatter = NSDateFormatter()
         formatter.dateFormat = format
         return formatter.dateFromString(dateString)!
