@@ -144,14 +144,14 @@ public class CoreDataManager: NSObject {
     */
     func resetCoreData() {
         print("Resetting the core data database")
-        var success: Bool = false
+        var success: Bool = true
         let storesArray = _persistentStoreCoordinator?.persistentStores
         
         if let stores = storesArray {
             for store in stores {
                 do {
                     try NSFileManager.defaultManager().removeItemAtURL((store.URL)!)
-                    success = true
+                    success = success && true
                 } catch let error as NSError {
                     print(error.description)
                     success = false
