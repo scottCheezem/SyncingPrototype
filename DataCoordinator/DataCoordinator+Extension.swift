@@ -176,6 +176,20 @@ public extension DataCoordinator {
 //    
 //    // MARK: Device
 //    
+//    public func firstDeviceForMacAddress(macAddress: String?) -> Device? {
+//        if macAddress != nil {
+//            let deviceFetchRequest = NSFetchRequest(entityName: "Device")
+//            let devicePredicate = NSPredicate(format: "macAddress CONTAINS[cd] %@", macAddress)
+//            let deviceSortDescriptors = NSSortDescriptor(key: "updatedAt", ascending: false)
+//            deviceFetchRequest.sortDescriptors = deviceSortDescriptors
+//            deviceFetchRequest = devicePredicate
+//            if let device: Device = DataSource.sharedInstance.executeFetchRequest(deviceFetchRequest)?.first as? Device {
+//                return device
+//            }
+//        }
+//        return nil
+//    }
+//    
 //    public func fetchObjectsForBTSetupDevices(setupDevices: [BTSetupDevice], completionHandler: (objects: [AnyObject]?) -> Void) -> () {
 //        var macAddresses = [String]()
 //        for device in setupDevices {
