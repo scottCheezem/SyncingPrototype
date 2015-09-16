@@ -16,8 +16,8 @@ public extension DataCoordinator {
         let currentUserFetchRequest = NSFetchRequest(entityName: "User")
         let currentUserPredicate = NSPredicate(format: "currentUser == %@", true)
         currentUserFetchRequest.predicate = currentUserPredicate
-        if DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first != nil {
-            return DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User
+        if let user: User = DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User {
+            return user
         } else {
             return nil
         }
@@ -144,8 +144,8 @@ public extension DataCoordinator {
 //        let currentClientDeviceFetchRequest = NSFetchRequest(entityName: "ClientDevice")
 //        let currentClientDevicePredicate = NSPredicate(format: "currentDevice == %@", true)
 //        currentClientDeviceFetchRequest.predicate = currentClientDevicePredicate
-//        if DataSource.sharedInstance.executeFetchRequest(currentClientDeviceFetchRequest)?.first != nil {
-//            return DataSource.sharedInstance.executeFetchRequest(currentClientDeviceFetchRequest)?.first as? ClientDevice
+//        if let device: Device = DataSource.sharedInstance.executeFetchRequest(currentClientDeviceFetchRequest)?.first as? Device {
+//            return device
 //        } else {
 //            return nil
 //        }
@@ -203,8 +203,8 @@ public extension DataCoordinator {
 //        let localUserFetchRequest = NSFetchRequest(entityName: "User")
 //        let localUserPredicate = NSPredicate(format: "userID == %@", user.userID)
 //        localUserFetchRequest.predicate = localUserPredicate
-//        if DataSource.sharedInstance.executeFetchRequest(localUserFetchRequest)?.first != nil {
-//            let localUser = DataSource.sharedInstance.executeFetchRequest(localUserFetchRequest)?.first as? User
+//        if let user: User = DataSource.sharedInstance.executeFetchRequest(localUserFetchRequest)?.first as? User {
+//            let localUser = user
 //            let device = Device(setupDevice, user: user)
 //            return device
 //        }
@@ -224,5 +224,20 @@ public extension DataCoordinator {
 //    }
 //    
 //    // MARK: UserShare
+//    
+//    public func filterForAcceptedUserShares(completionHandler: (objects: [AnyObject]?) -> Void) -> () {
+//        //TODO bt find all
+//    }
+//    
+//    public func findUserSharesAwaitingApproval(completionHandler: (objects: [AnyObject]?) -> Void) -> () {
+//        let userShares = [UserShare]()
+//        let userShareFetchRequest = NSFetchRequest(entityName: "UserShare")
+//        let userSharePredicate = NSPredicate(format: "receiver.userID == %@ AND accepted == false AND deletedAt == nil", currentUser().userID)
+//        userShareFetchRequest.predicate = userSharePredicate
+//        if let shares = DataSource.sharedInstance.executeFetchRequest(userShareFetchRequest) {
+//            userShares = shares
+//        }
+//        completionHandler(objects: userShares)
+//    }
     
 }

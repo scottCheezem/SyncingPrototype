@@ -11,6 +11,8 @@ import CoreData
 
 public class User: NSManagedObject, Syncable {
     
+    // MARK: Initialization
+    
     /**
     Init method that allows a user to be created though User()
     */
@@ -20,29 +22,33 @@ public class User: NSManagedObject, Syncable {
         clientCreatedAt = NSDate()
     }
  
-    @NSManaged public var firstName: String?
+    // MARK: Properties
     
-    @NSManaged public var serverUpdatedAt : NSDate
-    @NSManaged public var clientUpdatedAt : NSDate
-    @NSManaged public var serverCreatedAt : NSDate
-    @NSManaged public var clientCreatedAt : NSDate
-    @NSManaged public var updatedOnClientAndServer : Bool
+    @NSManaged public var firstName: String?
+    @NSManaged public var serverUpdatedAt: NSDate
+    @NSManaged public var clientUpdatedAt: NSDate
+    @NSManaged public var serverCreatedAt: NSDate
+    @NSManaged public var clientCreatedAt: NSDate
+    @NSManaged public var updatedOnClientAndServer: Bool
+    
+    // MARK: Class functions
 
     public func populateWithJson(jsonDict: NSDictionary) {
         firstName = jsonDict["first_name"] as? String
         
         serverCreatedAt = NSDate.parse((jsonDict["created_at"] as? String)!)
         serverUpdatedAt = NSDate.parse((jsonDict["updated_at"] as? String)!)
-                
     }
     
     public func jsonRepresentation() -> NSDictionary {
-        
-        
-        return ["first_name":firstName!, "created_at":clientCreatedAt.toString(), "updated_at":clientCreatedAt.toString(), ]
+        return ["first_name": firstName!, "created_at": clientCreatedAt.toString(), "updated_at": clientCreatedAt.toString()]
     }
     
-    static public var apiEndPointForClass :String = "user"
+    // MARK: API Endpoint
+    
+    static public var apiEndPointForClass: String = "user"
+    
+    // MARK: Property functions
     
     
 }
