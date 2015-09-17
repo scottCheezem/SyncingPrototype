@@ -23,29 +23,29 @@ public class APIClient: NSObject {
     
     //should AnyClass be SyncableModel
     public func getDataForClass(classEndPoint : String, params:[String: AnyObject]? = nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?) -> (){
-        self.manager.request(.GET, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON { (_, _, result) -> Void in
-            debugPrint(self.manager.session.configuration.HTTPAdditionalHeaders)
+        Alamofire.request(.GET, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON { (request, response, result) -> Void in
+            debugPrint(response?.statusCode)
             completionHandler?(success: result.isSuccess,result: result.value!)
         }
 
     }
     
     public func postDataForClass(classEndPoint : String, params:[String: AnyObject], headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
-        self.manager.request(.POST, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
+        Alamofire.request(.POST, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
             (_, _, result)->Void in
             completionHandler?(success: result.isSuccess, result: result.value!)
         }
     }
     
     public func putDataForClass(classEndPoint : String, params:[String: AnyObject], headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
-        self.manager.request(.PUT, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
+        Alamofire.request(.PUT, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
             (_, _, result)->Void in
             completionHandler?(success: result.isSuccess, result: result.value!)
         }
     }
     
     public func deleteDataForClass(classEndPoint : String, params:[String: AnyObject], headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
-        self.manager.request(.DELETE, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
+        Alamofire.request(.DELETE, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
             (_, _, result)->Void in
             completionHandler?(success: result.isSuccess, result: result.value!)
         }
@@ -54,24 +54,42 @@ public class APIClient: NSObject {
 
 public extension APIClient{
     
-    public func authenticate(username: String, password: String){
+    public func authenticate(username: String, password: String, completionHandler:((request:URLRequestConvertible)-> Void)?) ->(){
         
         let grantType = "password"
     
         let authDic:[String:String] = ["password":password, "username":username, "grant_type":grantType]
 
 
-        self.manager.request(.POST, "https://staging.beam.dental/api/v1/users/token", parameters: authDic).responseJSON { (request, response, result) -> Void in
+        Alamofire.request(.POST, "https://staging.beam.dental/api/v1/users/token", parameters: authDic).responseJSON { (request, response, result) -> Void in
+            
             let payload = result.value!["payload"] as! NSArray
+            
             let bearerToken = payload.firstObject
-//            debugPrint(bearerToken)
-            var authHeaders:[String:String] = [:]
-            authHeaders["Authorization"] = "Bearer "+(bearerToken!["access_token"] as? String)!
-            self.manager.session.configuration.HTTPAdditionalHeaders = authHeaders
-            debugPrint("the manager's headers are here",self.manager.session.configuration.HTTPAdditionalHeaders)
+            debugPrint("bearer token:",bearerToken)
+            let bearerTokenString = bearerToken?["access_token"] as? String
+            debugPrint(bearerTokenString)
+            
+            var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
+            defaultHeaders["Authorization"] = "Bearer \(bearerTokenString)"
+
+            let config = NSURLSessionConfiguration.defaultSessionConfiguration()
+            config.HTTPAdditionalHeaders = defaultHeaders
+            self.manager = Alamofire.Manager(configuration: config)
+            
+            
+            
+            debugPrint(self.manager.session.configuration.HTTPAdditionalHeaders)
+
          
         }
-
+        
         
     }
 }
+
+public extension URLRequestConvertible {
+    
+}
+
+
