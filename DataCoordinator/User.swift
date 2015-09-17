@@ -19,6 +19,8 @@ public class User: NSManagedObject, Syncable {
         self.init(context: CoreDataManager.shared.managedObjectContext, name: "User")
         clientCreatedAt = NSDate()
     }
+    
+    static public var primaryKeyTitle : String = "userID"
  
     @NSManaged public var firstName: String?
     
@@ -36,6 +38,12 @@ public class User: NSManagedObject, Syncable {
                 
     }
     
+    public var primaryKeyValue : String {
+        get {
+            return "EventuallyTheUserID"
+        }
+    }
+    
     public func jsonRepresentation() -> NSDictionary {
         
         
@@ -43,6 +51,4 @@ public class User: NSManagedObject, Syncable {
     }
     
     static public var apiEndPointForClass :String = "user"
-    
-    
 }
