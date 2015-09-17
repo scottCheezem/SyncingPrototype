@@ -160,5 +160,4 @@ public class User: NSManagedObject, Syncable {
 //        let device = DataCoordinator.firstDeviceForMacAddress(macAddress)
 //        return device != nil && device.connectedUser && device.connectedUser.userID == userID
 //    }
->>>>>>> 4c4daeca1afbb07e2b3c9970699e894f202f1a91
 }

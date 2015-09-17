@@ -16,7 +16,14 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     /// Object that is used to interact with objects that are stored on the device.
     private let dataSource = DataSource()
     
+    /**
+    Main Initializer
     
+    - parameter clientUpdateableClasses: Classes that will be can be updated on the device and sent to the server.
+    - parameter serverUpdateableClasses: Classes that can be updated on the server and sent to the device.
+    
+    - returns: <#return value description#>
+    */
     init(clientUpdateableClasses : [String : AnyClass], serverUpdateableClasses : [String : AnyClass]) {
         super.init()
         serverAndClientSyncingService = ServerAndClientSyncService(withDataSource: self, networkService: self, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdateableClasses)
@@ -36,6 +43,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     internal func getObjectsFromServerOfClass(cls: AnyClass, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
         
     }
+    
     
     internal func postObjects(objects: [Updateable], withCompletion completion: (objects: [Updateable]?, error: NSError?) -> Void) {
         
@@ -133,7 +141,19 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
         return true
     }
     
+    /**
+    Returns all of objects from the passed in class that are stored on the device.
+    
+    - parameter cls: cls whose objects are needed
+    
+    - returns: All instances of that class that are stored on the device.
+    */
     public func allObjectsOfClass(cls: AnyClass) -> [AnyObject] {
-        return [AnyObject]()
+       let allObjectsOfClass = dataSource.allObjectsOfClass(cls)
+       guard let allObjectsInClass = allObjectsOfClass else {
+            return [AnyObject]()
+       }
+        
+      return allObjectsInClass
     }
 }
