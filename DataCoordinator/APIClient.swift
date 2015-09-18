@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Alamofire
+//import Alamofire
 
 public class APIClient: NSObject {
 
@@ -17,7 +17,7 @@ public class APIClient: NSObject {
     
     public var baseUrl : String = ""
     
-    public var manager = Alamofire.Manager.sharedInstance
+    public var manager = Manager.sharedInstance
     
     
     //should AnyClass be SyncableModel
@@ -62,7 +62,7 @@ public extension APIClient{
         let grantType = "password"
         let authDic:[String:String] = ["password":password, "username":username, "grant_type":grantType]
         
-        Alamofire.request(.POST, "https://staging.beam.dental/api/v1/users/token", parameters: authDic).responseJSON {
+        request(.POST, "https://staging.beam.dental/api/v1/users/token", parameters: authDic).responseJSON {
             (request, response, result) -> Void in
             
             let payload = result.value!["payload"] as! NSArray
@@ -71,12 +71,12 @@ public extension APIClient{
             
             let bearerTokenString = bearerToken?["access_token"] as? String
             
-            var defaultHeaders = Alamofire.Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
+            var defaultHeaders = Manager.sharedInstance.session.configuration.HTTPAdditionalHeaders ?? [:]
             defaultHeaders["Authorization"] = "Bearer \(bearerTokenString!)"
             
             let config = NSURLSessionConfiguration.defaultSessionConfiguration()
             config.HTTPAdditionalHeaders = defaultHeaders
-            self.manager = Alamofire.Manager(configuration: config)
+            self.manager = Manager(configuration: config)
             completionHandler?(success: result.isSuccess, result: result.value!)
             
         }
