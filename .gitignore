@@ -1,6 +1,6 @@
 # Created by https://www.gitignore.io/api/xcode
 
-*.playground/
+
 
 ### Xcode ###
 # Xcode
@@ -27,3 +27,4 @@ xcuserdata
 *.moved-aside
 *.xcuserstate
 
+*.playground
