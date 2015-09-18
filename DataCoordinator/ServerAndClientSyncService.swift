@@ -15,9 +15,9 @@ import Foundation
     of a ServerAndClientSyncService.
 */
 protocol SyncingDataSource {
-    func saveObjects(objects : [DevicePersistedClass]) -> Bool
-    func deleteObjects(objects : [DevicePersistedClass]) -> Bool
-    func allObjectsOfClass(cls : AnyClass) -> [AnyObject]
+    func saveObjects(objects : [APIClass]) -> Bool
+    func deleteObjects(objects : [APIClass]) -> Bool
+    func allObjectsOfClass(cls : APIClass.Type) -> [AnyObject]
 }
 
 //MARK: SyncingNetworkService Protocol Definition
@@ -28,7 +28,7 @@ protocol SyncingDataSource {
 */
 protocol SyncingNetworkService {
     func postObjects(objects : [Updateable], withCompletion completion : (objects : [Updateable]?, error : NSError?) -> Void)
-    func getObjectsFromServerOfClass(cls : AnyClass , withCompletion completion : (objects : [Syncable]?, error : NSError?) -> Void)
+    func getObjectsFromServerOfClass(cls : Updateable.Type , withCompletion completion : (objects : [Syncable]?, error : NSError?) -> Void)
 }
 
 //MARK: Syncing Class
@@ -47,10 +47,10 @@ class ServerAndClientSyncService {
     private let networkService : SyncingNetworkService
     
     ///Dictionary containing all the classes that can be synced from the server to the device.
-    private let serverUpdateableClasses : [String : AnyClass]
+    private let serverUpdateableClasses : [String : Syncable.Type]
     
     ///Dictionary containing all the classes that can be synced from the device to the server.
-    private let clientUpdateableClasses : [String : AnyClass]
+    private let clientUpdateableClasses : [String : Updateable.Type]
 
     //Number of attempts a class is allowed to fail at sending its objects that arent fully synced to the server.
     private let allowedAttemptsAtPostingToServer = 4
@@ -71,7 +71,7 @@ class ServerAndClientSyncService {
     
     - returns: Instance of ServerAndClientSyncService.
     */
-    init(withDataSource  dataSource : SyncingDataSource, networkService : SyncingNetworkService, serverUpdateableClasses : [String : AnyClass], andClientUpdateableClasses  clientUpdateableClasses: [String : AnyClass]) {
+    init(withDataSource  dataSource : SyncingDataSource, networkService : SyncingNetworkService, serverUpdateableClasses : [String : Syncable.Type], andClientUpdateableClasses  clientUpdateableClasses: [String : Updateable.Type]) {
         self.dataSource = dataSource
         self.networkService = networkService
         self.serverUpdateableClasses = serverUpdateableClasses
@@ -87,9 +87,14 @@ class ServerAndClientSyncService {
     - parameter objects: New objects from the server that need to be persisted on the client.
     */
     internal func newObjectsReceivedFromServer(objects : [Syncable]) {
-        let objectsAsUpdateable = convertSyncableArrayToUpdateableArray(objects)
-        let objectsAsDevicePersisted = convertUpdateableArrayToDevicePersistedArray(objectsAsUpdateable)
-        dataSource.saveObjects(objectsAsDevicePersisted)
+        
+        let objectsThatWillBeDeleted = objects.filter {$0.deletedAt != nil}
+
+        let objectsAsAPIClass = objects.map {$0 as APIClass}
+        let deletedObjectsAsAPIClass = objectsThatWillBeDeleted.map {$0 as APIClass}
+        
+        dataSource.deleteObjects(objectsAsAPIClass)
+        dataSource.saveObjects(deletedObjectsAsAPIClass)
     }
     
     /**
@@ -145,7 +150,7 @@ class ServerAndClientSyncService {
         performOperationOnEachClientUpdateableClass { [weak self] cls, classKey in
             let allObjectsInClass = self!.dataSource.allObjectsOfClass(cls)
             
-            allObjectsDictionary[classKey] = self!.convertAnyObjectArrayToUpdateableArray(allObjectsInClass)
+            allObjectsDictionary[classKey] = allObjectsInClass.map {$0 as! Updateable}
         }
         
         return allObjectsDictionary
@@ -156,54 +161,14 @@ class ServerAndClientSyncService {
     
     - parameter blockToPerform: Block to execute for each class that is being tracked.
     */
-    private func performOperationOnEachClientUpdateableClass(blockToPerform : (cls : AnyClass, classKey : String) -> Void) {
+    private func performOperationOnEachClientUpdateableClass(blockToPerform : (cls : Updateable.Type, classKey : String) -> Void) {
         for (classKey, cls) in clientUpdateableClasses {
             blockToPerform(cls: cls, classKey: classKey)
         }
     }
-    
+
     /**
-    Converts an array of AnyObects to an Array of Updateable objects as long as the objects conform to the
-    updateable protocol
-    
-    - parameter anyObjectArray: original Array that needs to be converted
-    
-    - returns: Objects in the original array, but casted as Updateable.
-    */
-    private func convertAnyObjectArrayToUpdateableArray(anyObjectArray : [AnyObject]) -> [Updateable] {
-        let syncableObjects = anyObjectArray.map { updateableObject in
-            return updateableObject as! Updateable
-        }
-        
-        return syncableObjects
-    }
-    
-    /**
-    Converts an array of Syncable objects to an Array of Updateable objects as long as the objects conform to the
-    updateable protocol
-    
-    - parameter syncableArray: original Array that needs to be converted
-    
-    - returns: Objects in the original array, but casted as Updateable.
-    */
-    private func convertSyncableArrayToUpdateableArray(syncableArray : [Syncable]) -> [Updateable] {
-        let updateableArray = syncableArray.map { syncableObject in
-            return syncableObject as Updateable
-        }
-        
-        return updateableArray
-    }
-    
-    private func convertUpdateableArrayToDevicePersistedArray(updateableArray : [Updateable]) -> [DevicePersistedClass] {
-        let  devicePersistedArray = updateableArray.map { updateableObject in
-            return updateableObject as DevicePersistedClass
-        }
-        
-        return devicePersistedArray
-    }
-    
-    /**
-    Filters out all objects that are only fully updated on the client.
+    Filters out all objects that are only fully updated on the server.
     
     - parameter dictionary: Dictionary to filter objects that need to be synced.
     
@@ -335,9 +300,8 @@ class ServerAndClientSyncService {
             mutSyncableObject.updatedOnClientAndServer = true
             syncableObjectsAsFullySynced.append(mutSyncableObject)
         }
-        
-        let updateableFullySyncedObjects = convertSyncableArrayToUpdateableArray(syncableObjectsAsFullySynced)
-        let devicePersistedFullSyncedObjects = convertUpdateableArrayToDevicePersistedArray(updateableFullySyncedObjects)
+
+        let devicePersistedFullSyncedObjects = syncableObjectsAsFullySynced.map{$0 as APIClass}
         dataSource.saveObjects(devicePersistedFullSyncedObjects)
     }
     
@@ -347,7 +311,7 @@ class ServerAndClientSyncService {
     - parameter updatedObjects: Objects that will be removed/
     */
     private func handleClientUpdateableObjectsThatWereSuccessfullyUpdatedOnServer(updatedObjects : [Updateable]) {
-        let devicePersistedObjects = convertUpdateableArrayToDevicePersistedArray(updatedObjects)
+        let devicePersistedObjects = updatedObjects.map{$0 as APIClass}
         self.dataSource.deleteObjects(devicePersistedObjects)
     }
   
@@ -368,7 +332,7 @@ class ServerAndClientSyncService {
     
     - parameter blockToPerform: Block to execute for each class that is being tracked.
     */
-    private func performOperationOnEachServerUpdateableClass(blockToPerform : (cls : AnyClass, classKey : String) -> Void) {
+    private func performOperationOnEachServerUpdateableClass(blockToPerform : (cls : Syncable.Type, classKey : String) -> Void) {
         for (classKey, cls) in serverUpdateableClasses {
             blockToPerform(cls: cls, classKey: classKey)
         }

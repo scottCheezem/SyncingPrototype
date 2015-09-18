@@ -32,7 +32,7 @@ public class User: NSManagedObject, Syncable {
     @NSManaged public var serverCreatedAt: NSDate
     @NSManaged public var clientCreatedAt: NSDate
     @NSManaged public var updatedOnClientAndServer: Bool
-    
+    @NSManaged public var deletedAt : NSDate?
     // MARK: Class Functions
 
     public func populateWithJson(jsonDict: NSDictionary) {

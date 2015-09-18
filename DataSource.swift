@@ -51,8 +51,9 @@ public class DataSource: NSObject {
     - parameter objects: The objects to delete
     - returns: If the operation was successful.
     */
-    public func deleteObjects(objects: [NSManagedObject]) -> Bool {
-        if CoreDataManager.shared.deleteObjects(objects) {
+    public func deleteObjects(objects: [APIClass]) -> Bool {
+        let nsManagedObjects = objects.map {$0 as! NSManagedObject}
+        if CoreDataManager.shared.deleteObjects(nsManagedObjects) {
             return true
         } else {
             return false
