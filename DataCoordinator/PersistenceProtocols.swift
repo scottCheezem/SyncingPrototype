@@ -8,27 +8,55 @@
 
 import Foundation
 
+/**
+*  Protocol used for classes that will be persisted on the device.
+*/
+public protocol DevicePersistedClass {
+    /// Name of the property that is used to hold the primaryKeyValue
+    static var primaryKeyTitle : String { get }
+    /// Value for the property that is the primaryKey
+    var primaryKeyValue : String { get }
+}
+internal extension DevicePersistedClass {
+    
+    /**
+    Method that returns a predicate used to retrieve this object from 
+    a selection
+    
+    - returns: Predicate used for filtering this object from a larger collection.
+    */
+    internal func predicateForFindingThisObject() -> NSPredicate {
+        let predicateString = Self.primaryKeyTitle + "= %@"
+        return NSPredicate(format: predicateString, argumentArray: [primaryKeyValue])
+    }
+}
+
+/**
+*  Protocol used for classes that are posted and or fetched from a server
+*/
 public protocol APIClass {
     func populateWithJson(jsonDict : NSDictionary)
     func jsonRepresentation() -> NSDictionary
     static var apiEndPointForClass : String { get set }
 }
 
-
-//the client code can update
-protocol Updateable: APIClass {
+/**
+*  Protocol used for classes that can updated from client to server.
+*/
+//TODO: Change the name of this and Syncable
+protocol Updateable: APIClass, DevicePersistedClass {
     var clientCreatedAt : NSDate { get set }
     var updatedOnClientAndServer : Bool { get set }
 }
 
+/**
+*  Protocol for classes that can be created and passed between the client and the server.
+*/
 protocol Syncable: Updateable {
     var serverUpdatedAt : NSDate { get set }
     var clientUpdatedAt : NSDate { get set }
     var serverCreatedAt : NSDate { get set }    
 }
-
-
-
 
 extension NSDate {
     

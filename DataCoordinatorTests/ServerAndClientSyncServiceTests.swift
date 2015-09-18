@@ -7,12 +7,26 @@
 //
 
 import Foundation
-import Quick
 import Nimble
+import Quick
 
 @testable import DataCoordinator
 
 class UpdateableTestClass: Updateable {
+    
+    static var primaryKeyTitle = "doesntMatter"
+    
+    func populateWithJson(jsonDict: NSDictionary) {
+        
+    }
+    
+    func jsonRepresentation() -> NSDictionary {
+        return NSDictionary()
+    }
+    
+    static var apiEndPointForClass = ""
+    
+    var primaryKeyValue = ""
     var clientCreatedAt = NSDate()
     var updatedOnClientAndServer = false
 }
@@ -45,28 +59,60 @@ class TestNetworkService: SyncingNetworkService {
     var attemptsAtPostingObject = 0
     var objectsThatHaveBeenPosted = [Updateable]()
     
+    var objectsThatHaveBeenFetched = [Syncable]()
+    
+    var carsToBeFetched = [Car]()
+    var mechanicsToBeFetched = [Mechanic]()
+    
     init(errorOutOnAllCalls : Bool) {
         self.errorOutOnAllCalls = errorOutOnAllCalls
     }
     
     internal func postObjects(objects: [Updateable], withCompletion completion: (objects: [Updateable]?, error: NSError?) -> Void) {
-        guard errorOutOnAllCalls == false else {
+        
+        attemptsAtPostingObject++
+        guard !errorOutOnAllCalls else {
             let error = NSError(domain: "Test", code: 123, userInfo: nil)
             completion(objects: nil, error: error)
             return
         }
         
         objectsThatHaveBeenPosted.appendContentsOf(objects)
-    
+        
         completion(objects: objects, error: nil)
+    }
+    
+    internal func getObjectsFromServerOfClass(cls: AnyClass, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
+        guard !errorOutOnAllCalls else {
+            
+            let error = NSError(domain: "Testing", code: 001, userInfo: nil)
+            
+            completion(objects: nil, error: error)
+            return
+        }
+        
+        
+        var objectsToReturn = [Syncable]()
+        
+        switch cls {
+        case is Car.Type :
+            objectsToReturn = carsToBeFetched.map{$0 as Syncable}
+        case is Mechanic.Type :
+            objectsToReturn = mechanicsToBeFetched.map{$0 as Syncable}
+        default :
+            print("Class passed to fetch that cannnot be")
+        }
+        
+        objectsThatHaveBeenFetched.appendContentsOf(objectsToReturn)
+        completion(objects: objectsToReturn, error: nil)
     }
 }
 
 class TestDataSource: SyncingDataSource {
     
     //Testing Methods
-    internal var savedObjects = [Updateable]()
-    internal var deletedObjects = [Updateable]()
+    internal var savedObjects = [DevicePersistedClass]()
+    internal var deletedObjects = [DevicePersistedClass]()
     
     private let cars : [Car]
     private let drivers : [Driver]
@@ -81,19 +127,18 @@ class TestDataSource: SyncingDataSource {
         self.gasStations = gasStations
     }
     
-    
     //SyncingDataSource Protocol
-    internal func saveObjects(objects: [Updateable]) -> Bool {
+    internal func saveObjects(objects: [DevicePersistedClass]) -> Bool {
         savedObjects.appendContentsOf(objects)
         return true
     }
     
-    internal func deleteObjects(objects: [Updateable]) -> Bool {
+    internal func deleteObjects(objects: [DevicePersistedClass]) -> Bool {
         deletedObjects.appendContentsOf(objects)
         return true
     }
     
-    internal func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
+    internal func allObjectsOfClass(cls: AnyClass) -> [AnyObject] {
         switch cls {
             
         case is Car.Type :
@@ -115,19 +160,19 @@ class ServerAndClientSyncTests : QuickSpec {
     
     override func spec() {
         
+        let clientUpdatableClasses : [String : AnyClass] = ["Car" : Car.self,"Driver" : Driver.self, "GasStation" : GasStation.self]
+        let serverUpdateableClasses : [String : AnyClass] = ["Car" : Car.self, "Mechanic" : Mechanic.self]
 
         describe("Sending objects to the server") {
-            
-            let clientUpdatableClasses : [String : AnyClass] = ["Car" : Car.self,"Driver" : Driver.self, "GasStation" : GasStation.self]
-            let serverUpdateableClasses : [String : AnyClass] = ["Car" : Car.self, "Driver" : Driver.self, "GasStation" : GasStation.self]
 
             context("All classes cannot post to server") {
+                
                 let testNetworkingService = TestNetworkService(errorOutOnAllCalls: true)
                 let testDataSource = TestDataSource(cars: self.defaultCars, drivers: self.defaultDrivers, mechanics: self.defaultMechanics, gasStations: self.defaultGasStations)
                 let syncServiceToTest = ServerAndClientSyncService(withDataSource: testDataSource, networkService: testNetworkingService, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdatableClasses)
                 
                  beforeSuite {
-                    waitUntil(timeout : 1) { done in
+                    waitUntil(timeout : 10) { done in
                         syncServiceToTest.sendNotFullySyncedObjectsToServerWithCompletion {
                             done()
                         }
@@ -146,13 +191,14 @@ class ServerAndClientSyncTests : QuickSpec {
                 }
             }
             
-            context("All classes post to the server correctly") {
+            context("All classes post to the server correctly with assortment of data") {
+                
                 let testNetworkingService = TestNetworkService(errorOutOnAllCalls: false)
-                                let testDataSource = TestDataSource(cars: self.defaultCars, drivers: self.defaultDrivers, mechanics: self.defaultMechanics, gasStations: self.defaultGasStations)
+                let testDataSource = TestDataSource(cars: self.defaultCars, drivers: self.defaultDrivers, mechanics: self.defaultMechanics, gasStations: self.defaultGasStations)
                 let syncServiceToTest = ServerAndClientSyncService(withDataSource: testDataSource, networkService: testNetworkingService, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdatableClasses)
                 
                 beforeSuite {
-                    waitUntil(timeout : 1) { done in
+                    waitUntil(timeout : 10) { done in
                         syncServiceToTest.sendNotFullySyncedObjectsToServerWithCompletion {
                             done()
                         }
@@ -164,13 +210,130 @@ class ServerAndClientSyncTests : QuickSpec {
                 }
                 
                 it("Should post the correct number of objects to the server") {
-                    
+                    expect(testNetworkingService.objectsThatHaveBeenPosted.count).to(equal(3))
                 }
                 
                 it("Should tell the datasource the correct number of objects to delete") {
-                    
+                    expect(testDataSource.deletedObjects.count).to(equal(2))
                 }
             }
+            
+            context("Having no records to query") {
+                
+                let testNetworkingService = TestNetworkService(errorOutOnAllCalls: false)
+                let testDataSource = TestDataSource(cars: [Car](), drivers: [Driver](), mechanics: [Mechanic](), gasStations:[GasStation]())
+                let syncServiceToTest = ServerAndClientSyncService(withDataSource: testDataSource, networkService: testNetworkingService, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdatableClasses)
+                
+                beforeSuite {
+                    waitUntil(timeout : 10) { done in
+                        syncServiceToTest.sendNotFullySyncedObjectsToServerWithCompletion {
+                            done()
+                        }
+                    }
+                }
+                
+                it("Should not have posted any objects to the server") {
+                    expect(testNetworkingService.objectsThatHaveBeenPosted.count).to(equal(0))
+                }
+                
+                it("Should not have told it's datasource to delete any objects") {
+                    expect(testDataSource.deletedObjects.count).to(equal(0))
+                }
+            }
+        }
+        
+        describe("Retrieving new data from the server") {
+            
+            context("The server returns an assortment of data") { [weak self] in
+                guard let weakself = self else {return}
+                let testNetworkingService = TestNetworkService(errorOutOnAllCalls: false)
+                let testDataSource = TestDataSource(cars: weakself.defaultCars, drivers: weakself.defaultDrivers, mechanics: weakself.defaultMechanics, gasStations: weakself.defaultGasStations)
+                let syncServiceToTest = ServerAndClientSyncService(withDataSource: testDataSource, networkService: testNetworkingService, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdatableClasses)
+                
+                let cars = weakself.fetchedCars
+                let mechanics = weakself.fetchedMechanics 
+                
+                testNetworkingService.carsToBeFetched = cars
+                testNetworkingService.mechanicsToBeFetched = mechanics
+
+                beforeSuite {
+                    waitUntil(timeout: 10) { done in
+                        syncServiceToTest.updateSyncableClassesFromTheServerWithCompletion {
+                            done()
+                        }
+                    }
+                }
+                
+                it("Should fetch the right number of objects from the server") {
+                    expect(testNetworkingService.objectsThatHaveBeenFetched.count).to(equal(4))
+                }
+                
+                it("should have saved the correct number of objects") {
+                    expect(testDataSource.savedObjects.count).to(equal(4))
+                }
+            }
+
+            context("Cannot successfully pull any data from the server") { [weak self] in
+                guard let weakself = self else {return}
+                let testNetworkingService = TestNetworkService(errorOutOnAllCalls: true)
+                let testDataSource = TestDataSource(cars: weakself.defaultCars, drivers: weakself.defaultDrivers, mechanics: weakself.defaultMechanics, gasStations: weakself.defaultGasStations)
+                let syncServiceToTest = ServerAndClientSyncService(withDataSource: testDataSource, networkService: testNetworkingService, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdatableClasses)
+                
+                beforeSuite {
+                    waitUntil(timeout: 10) { done in
+                        syncServiceToTest.updateSyncableClassesFromTheServerWithCompletion {
+                            done()
+                        }
+                    }
+                }
+                
+                it("Should not have received any objects") {
+                    expect(testNetworkingService.objectsThatHaveBeenFetched.count).to(equal(0))
+                }
+                
+                it("Should have not saved any objects") {
+                    expect(testDataSource.savedObjects.count).to(equal(0))
+                }
+            }
+            
+            context("The Server has no new objects") { [weak self] in
+                guard let weakself = self else {return}
+                let testNetworkingService = TestNetworkService(errorOutOnAllCalls: false)
+                let testDataSource = TestDataSource(cars: weakself.defaultCars, drivers: weakself.defaultDrivers, mechanics: weakself.defaultMechanics, gasStations: weakself.defaultGasStations)
+                let syncServiceToTest = ServerAndClientSyncService(withDataSource: testDataSource, networkService: testNetworkingService, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdatableClasses)
+                
+                beforeSuite {
+                    waitUntil(timeout: 10) { done in
+                        syncServiceToTest.updateSyncableClassesFromTheServerWithCompletion {
+                            done()
+                        }
+                    }
+                }
+                
+                it("Should not have received any objects") {
+                    expect(testNetworkingService.objectsThatHaveBeenFetched.count).to(equal(0))
+                }
+                
+                it("Should have not saved any objects") {
+                    expect(testDataSource.savedObjects.count).to(equal(0))
+                }
+            }
+        }
+    }
+    
+    var fetchedCars : [Car] {
+        get {
+            let car1 = Car()
+            let car2 = Car()
+            let car3 = Car()
+            
+            return [car1, car2, car3]
+        }
+    }
+    var fetchedMechanics : [Mechanic] {
+        get {
+            let mechanic1 = Mechanic()
+            return [mechanic1]
         }
     }
     

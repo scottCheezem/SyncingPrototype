@@ -31,9 +31,13 @@
 		35E9F7661BA8735300860961 /* DataCoordinator+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E9F7651BA8735300860961 /* DataCoordinator+Extension.swift */; settings = {ASSET_TAGS = (); }; };
 		35F31F911BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */; settings = {ASSET_TAGS = (); }; };
 		35F31F921BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */; settings = {ASSET_TAGS = (); }; };
-		C87573961BA85B9C00EF7FC2 /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C87573811BA8593700EF7FC2 /* Quick.framework */; };
-		C87573971BA85BA700EF7FC2 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C875738E1BA8596900EF7FC2 /* Nimble.framework */; };
 		C87573991BA85C1600EF7FC2 /* ServerAndClientSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87573981BA85C1600EF7FC2 /* ServerAndClientSyncServiceTests.swift */; settings = {ASSET_TAGS = (); }; };
+		C8A925661BA9B3A8008B7ECE /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C875738E1BA8596900EF7FC2 /* Nimble.framework */; };
+		C8A925671BA9B3A8008B7ECE /* Nimble.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C875738E1BA8596900EF7FC2 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C8A9256A1BA9B3AF008B7ECE /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C875737B1BA8593700EF7FC2 /* Quick.framework */; };
+		C8A9256B1BA9B3AF008B7ECE /* Quick.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C875737B1BA8593700EF7FC2 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C8BB90A71BA9A52800DAA03B /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C87573811BA8593700EF7FC2 /* Quick.framework */; };
+		C8BB90A81BA9A53500DAA03B /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C875738E1BA8596900EF7FC2 /* Nimble.framework */; };
 		C8C2CFA11BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */; settings = {ASSET_TAGS = (); }; };
 		C8C2CFA21BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */; settings = {ASSET_TAGS = (); }; };
 		C8C2CFA91BA212990052F0C1 /* PersistenceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA81BA212990052F0C1 /* PersistenceProtocols.swift */; settings = {ASSET_TAGS = (); }; };
@@ -181,6 +185,20 @@
 			remoteGlobalIDString = 1F925EB7195C0D6300ED456B;
 			remoteInfo = "Nimble-OSXTests";
 		};
+		C8A925681BA9B3A8008B7ECE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C87573861BA8596900EF7FC2 /* Nimble.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1F1A74281940169200FFFC47;
+			remoteInfo = "Nimble-iOS";
+		};
+		C8A9256C1BA9B3AF008B7ECE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C875736D1BA8593700EF7FC2 /* Quick.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = DAEB6B8D1943873100289F44;
+			remoteInfo = "Quick-OSX";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -190,6 +208,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C8A9256B1BA9B3AF008B7ECE /* Quick.framework in Embed Frameworks */,
+				C8A925671BA9B3A8008B7ECE /* Nimble.framework in Embed Frameworks */,
 				0650EDDD1BA1E0EE00E83AD4 /* DataCoordinator.framework in Embed Frameworks */,
 				0650EE181BA229A300E83AD4 /* Alamofire.framework in Embed Frameworks */,
 			);
@@ -244,8 +264,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C87573971BA85BA700EF7FC2 /* Nimble.framework in Frameworks */,
-				C87573961BA85B9C00EF7FC2 /* Quick.framework in Frameworks */,
+				C8BB90A81BA9A53500DAA03B /* Nimble.framework in Frameworks */,
+				C8BB90A71BA9A52800DAA03B /* Quick.framework in Frameworks */,
 				0650EDD11BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -254,6 +274,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C8A9256A1BA9B3AF008B7ECE /* Quick.framework in Frameworks */,
+				C8A925661BA9B3A8008B7ECE /* Nimble.framework in Frameworks */,
 				0650EDDC1BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */,
 				0650EE171BA229A300E83AD4 /* Alamofire.framework in Frameworks */,
 			);
@@ -431,6 +453,8 @@
 			dependencies = (
 				0650EDDB1BA1E0EE00E83AD4 /* PBXTargetDependency */,
 				0650EE1A1BA229A300E83AD4 /* PBXTargetDependency */,
+				C8A925691BA9B3A8008B7ECE /* PBXTargetDependency */,
+				C8A9256D1BA9B3AF008B7ECE /* PBXTargetDependency */,
 			);
 			name = CoreDataTest;
 			productName = CoreDataTest;
@@ -698,6 +722,16 @@
 			name = "Alamofire iOS";
 			targetProxy = 0650EE191BA229A300E83AD4 /* PBXContainerItemProxy */;
 		};
+		C8A925691BA9B3A8008B7ECE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Nimble-iOS";
+			targetProxy = C8A925681BA9B3A8008B7ECE /* PBXContainerItemProxy */;
+		};
+		C8A9256D1BA9B3AF008B7ECE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Quick-OSX";
+			targetProxy = C8A9256C1BA9B3AF008B7ECE /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -874,7 +908,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = CoreDataTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -888,7 +924,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEFINES_MODULE = YES;
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = CoreDataTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

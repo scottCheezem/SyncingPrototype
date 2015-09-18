@@ -15,9 +15,9 @@ import Foundation
     of a ServerAndClientSyncService.
 */
 protocol SyncingDataSource {
-    func saveObjects(objects : [Updateable]) -> Bool
-    func deleteObjects(objects : [Updateable]) -> Bool
-    func allObjectsOfClass(cls : AnyClass) -> [AnyObject]?
+    func saveObjects(objects : [DevicePersistedClass]) -> Bool
+    func deleteObjects(objects : [DevicePersistedClass]) -> Bool
+    func allObjectsOfClass(cls : AnyClass) -> [AnyObject]
 }
 
 //MARK: SyncingNetworkService Protocol Definition
@@ -28,6 +28,7 @@ protocol SyncingDataSource {
 */
 protocol SyncingNetworkService {
     func postObjects(objects : [Updateable], withCompletion completion : (objects : [Updateable]?, error : NSError?) -> Void)
+    func getObjectsFromServerOfClass(cls : AnyClass , withCompletion completion : (objects : [Syncable]?, error : NSError?) -> Void)
 }
 
 //MARK: Syncing Class
@@ -39,7 +40,7 @@ class ServerAndClientSyncService {
     
     //MARK: Constant Properties
     
-    ///Object used to interact with data that is on the device.
+    ///Object used to interact with data that is pulled from and saved to the device.
     private let dataSource : SyncingDataSource
     
     ///Object used to interact with data that is going to or from the server.
@@ -50,10 +51,7 @@ class ServerAndClientSyncService {
     
     ///Dictionary containing all the classes that can be synced from the device to the server.
     private let clientUpdateableClasses : [String : AnyClass]
-    
-    /// Boolean used to indicate if the syncing service is in the process of posting objects to the server.
-    private var networkServiceIsPostingObjectsToServer = false
-    
+
     //Number of attempts a class is allowed to fail at sending its objects that arent fully synced to the server.
     private let allowedAttemptsAtPostingToServer = 4
     
@@ -86,10 +84,12 @@ class ServerAndClientSyncService {
     /**
     Method that should be called when the client has recieved new objects that are syncable.
     
-    - parameter objects: New objects from the server that need to be persisted on the client/
+    - parameter objects: New objects from the server that need to be persisted on the client.
     */
     internal func newObjectsReceivedFromServer(objects : [Syncable]) {
-        
+        let objectsAsUpdateable = convertSyncableArrayToUpdateableArray(objects)
+        let objectsAsDevicePersisted = convertUpdateableArrayToDevicePersistedArray(objectsAsUpdateable)
+        dataSource.saveObjects(objectsAsDevicePersisted)
     }
     
     /**
@@ -101,12 +101,7 @@ class ServerAndClientSyncService {
         let allObjectsDictionary = getAllObjectsOfEachClientUpdateableClass()
         let notFullySyncedObjectsOfEachClass = filterNotFullySyncedObjectsOutOfDictionary(allObjectsDictionary)
         
-        networkServiceIsPostingObjectsToServer = true
-        postAllObjectsToTheServer(notFullySyncedObjectsOfEachClass) { [weak self] in
-            guard let weakself = self else { return }
-            weakself.networkServiceIsPostingObjectsToServer = false
-            completion()
-        }
+        postAllObjectsToTheServer(notFullySyncedObjectsOfEachClass, withCompletion: completion)
     }
     
     /**
@@ -114,19 +109,28 @@ class ServerAndClientSyncService {
     
     - parameter completion: Block indicating when the pulled down changes has  been saved.
     */
-    internal func updateSyncableClassesFromTheServerWithCompletion(completion : (succeeded : Bool) -> Void) {
+    internal func updateSyncableClassesFromTheServerWithCompletion(completion : () -> Void) {
+        
+        let totalOfNumberOfCallBacksNeeded = serverUpdateableClasses.count
+        var numberOfCallBacksCompleted = 0
         
         for (_, cls) in serverUpdateableClasses {
-            fetchObjectsOfClassFromTheServer(cls) { objects, error in
+            networkService.getObjectsFromServerOfClass(cls) { [weak self] objects, error in
                 
+                numberOfCallBacksCompleted++
+                guard let weakself = self else {return}
+                if let objects = objects {
+                    weakself.newObjectsReceivedFromServer(objects)
+                }
+                
+                let allClassesHaveAttemptedFetch = numberOfCallBacksCompleted >= totalOfNumberOfCallBacksNeeded
+                if allClassesHaveAttemptedFetch {
+                    completion()
+                }
             }
         }
     }
-    
-    internal func fetchObjectsOfClassFromTheServer(cls : AnyClass, withCompletion completion : (objects : [Syncable]?, error : NSError?) -> Void) {
-        
-    }
-    
+
     //MARK: Client Updating Server Methods
     
     /**
@@ -141,12 +145,7 @@ class ServerAndClientSyncService {
         performOperationOnEachClientUpdateableClass { [weak self] cls, classKey in
             let allObjectsInClass = self!.dataSource.allObjectsOfClass(cls)
             
-            guard let allSyncableObjectsInClass = allObjectsInClass else {
-                allObjectsDictionary[classKey] = [Updateable]()
-                return
-            }
-            
-            allObjectsDictionary[classKey] = self!.convertAnyObjectArrayToUpdateableArray(allSyncableObjectsInClass)
+            allObjectsDictionary[classKey] = self!.convertAnyObjectArrayToUpdateableArray(allObjectsInClass)
         }
         
         return allObjectsDictionary
@@ -178,6 +177,7 @@ class ServerAndClientSyncService {
         
         return syncableObjects
     }
+    
     /**
     Converts an array of Syncable objects to an Array of Updateable objects as long as the objects conform to the
     updateable protocol
@@ -192,6 +192,14 @@ class ServerAndClientSyncService {
         }
         
         return updateableArray
+    }
+    
+    private func convertUpdateableArrayToDevicePersistedArray(updateableArray : [Updateable]) -> [DevicePersistedClass] {
+        let  devicePersistedArray = updateableArray.map { updateableObject in
+            return updateableObject as DevicePersistedClass
+        }
+        
+        return devicePersistedArray
     }
     
     /**
@@ -218,49 +226,29 @@ class ServerAndClientSyncService {
     
     - parameter allObjects: Objects that need to be sent to the server.
     */
-    private func postAllObjectsToTheServer(allObjects : [String : [Updateable]], withCompletion completion : (() -> Void)?) {
+    private func postAllObjectsToTheServer(allObjects : [String : [Updateable]], withCompletion completion : () -> Void) {
         
-        var numberOfClassesToPost = clientUpdateableClasses.count
+        let numberOfClassesToPost = allObjects.count
         
-        var classesThatProducedErrors = [String : [Updateable]]()
-        var classesThatUpdatedSuccessfully = [String : [Updateable]]()
-        
-        var numberOfNetworkCallsCompleted = 0
-        
-        for (clsKey, objectsToPost) in allObjects {
-            
-            //If we have reached the maximum attempts, dont allow this class to try and post again.
-            guard attemptsAtPostingClassDictionary[clsKey] < allowedAttemptsAtPostingToServer else {
-                resetAttemptsAtPostingToServerForClassKey(clsKey)
-                numberOfClassesToPost--
-                return
-            }
-            
-            networkServiceIsPostingObjectsToServer = true
-            
+        var postsCompletedOrAbandanoned = 0
+        for (_, objectsToPost) in allObjects {
+
             self.networkService.postObjects(objectsToPost) { [weak self] objects, error in
-                guard let weakself = self else {return}
-                numberOfNetworkCallsCompleted++
+                guard let weakself = self else { return }
                 
                 if error != nil {
-                    
-                    classesThatProducedErrors[clsKey] = objectsToPost
-                    let previousNumberOfFailedAttempts = weakself.attemptsAtPostingClassDictionary[clsKey]!
-                    weakself.attemptsAtPostingClassDictionary[clsKey] = previousNumberOfFailedAttempts + 1
-                    
-                } else {
-                    classesThatUpdatedSuccessfully[clsKey] = objectsToPost
-                    weakself.resetAttemptsAtPostingToServerForClassKey(clsKey)
-                }
-                
-                if numberOfNetworkCallsCompleted >= numberOfClassesToPost {
-                    
-                    weakself.processDictionaryWithSuccessfullyUpdatedClasses(classesThatUpdatedSuccessfully)
-                    weakself.processDictionariesThatProducedErrors(classesThatProducedErrors) {
-                        
-                        if let completion = completion {
+                    weakself.attemptToPostObjects(objectsToPost, withAttemptNumber: 1) { succeeded in
+                        postsCompletedOrAbandanoned++
+                        if numberOfClassesToPost == postsCompletedOrAbandanoned {
                             completion()
                         }
+                    }
+                } else {
+                    weakself.processObjectsThatWereSuccessfullyUpdatedOnTheServer(objectsToPost)
+                    postsCompletedOrAbandanoned++
+                    
+                    if postsCompletedOrAbandanoned == numberOfClassesToPost {
+                        completion()
                     }
                 }
             }
@@ -268,7 +256,32 @@ class ServerAndClientSyncService {
     }
     
     /**
-    Uses the passed in ClassKey to reset the attempts that class at posting to the server.
+    Attempts to post an array of objects set amount of times before failing
+    
+    - parameter objects:       Objects that need to be posted to the server
+    - parameter attemptNumber: The number of times these objects have been attempted to be pushed to the server.
+    - parameter completion:    Block to be performed upon either the successful post or upon the max number of failed attempts.
+    */
+    private func attemptToPostObjects(objects : [Updateable], withAttemptNumber attemptNumber : Int, andCompletion completion : (succeeded : Bool) -> Void) {
+            let maxNumberOfAttempts = 4
+        self.networkService.postObjects(objects) { [weak self] (apiObjects, error) -> Void in
+            guard error == nil else {
+                
+                let newAttemptNumber = attemptNumber + 1
+                
+                if newAttemptNumber >= maxNumberOfAttempts {
+                    completion(succeeded: false)
+                } else {
+                    self?.attemptToPostObjects(objects, withAttemptNumber: newAttemptNumber, andCompletion: completion)
+                }
+                return
+            }
+            self?.processObjectsThatWereSuccessfullyUpdatedOnTheServer(objects)
+        }
+    }
+    
+    /**
+    Uses the passed in ClassKey to reset the attempts that class has at posting to the server.
     
     - parameter clsKey: Key that is used to identifiy which class needs to be reset.
     */
@@ -285,11 +298,27 @@ class ServerAndClientSyncService {
     */
     private func processDictionaryWithSuccessfullyUpdatedClasses(successfullClasses : [String : [Updateable]]) {
         for (_, objects) in successfullClasses {
-            if let syncableObjects = objects as? [Syncable] {
-                handleServerUpdateableObjectsThatWereSuccesfullyUpdatedOnServer(syncableObjects)
-            } else {
-                handleClientUpdateableObjectsThatWereSuccessfullyUpdatedOnServer(objects)
+            processObjectsThatWereSuccessfullyUpdatedOnTheServer(objects)
+        }
+    }
+    
+    /**
+    Takes an array of objects and processes them for when they have been successfully updated on the server.
+    
+    - parameter objects: Objects that need to be processed after
+    */
+    private func processObjectsThatWereSuccessfullyUpdatedOnTheServer(objects : [Updateable]) {
+        
+        let firstObjectIsSyncable = objects.first as? Syncable
+        
+        if firstObjectIsSyncable != nil {
+            //TODO: Move this out into a seperate method
+            let syncableObjects : [Syncable] = objects.map { object in
+                return object as! Syncable
             }
+            handleServerUpdateableObjectsThatWereSuccesfullyUpdatedOnServer(syncableObjects)
+        } else {
+            handleClientUpdateableObjectsThatWereSuccessfullyUpdatedOnServer(objects)
         }
     }
     
@@ -308,7 +337,8 @@ class ServerAndClientSyncService {
         }
         
         let updateableFullySyncedObjects = convertSyncableArrayToUpdateableArray(syncableObjectsAsFullySynced)
-        dataSource.saveObjects(updateableFullySyncedObjects)
+        let devicePersistedFullSyncedObjects = convertUpdateableArrayToDevicePersistedArray(updateableFullySyncedObjects)
+        dataSource.saveObjects(devicePersistedFullSyncedObjects)
     }
     
     /**
@@ -317,19 +347,10 @@ class ServerAndClientSyncService {
     - parameter updatedObjects: Objects that will be removed/
     */
     private func handleClientUpdateableObjectsThatWereSuccessfullyUpdatedOnServer(updatedObjects : [Updateable]) {
-        
-        self.dataSource.deleteObjects(updatedObjects)
+        let devicePersistedObjects = convertUpdateableArrayToDevicePersistedArray(updatedObjects)
+        self.dataSource.deleteObjects(devicePersistedObjects)
     }
-    
-    private func processDictionariesThatProducedErrors(failedClasses : [String : [Updateable]], withCompletion  completion : () -> Void) {
-        guard !failedClasses.isEmpty else {
-            completion()
-            return
-        }
-        
-        postAllObjectsToTheServer(failedClasses, withCompletion: nil)
-    }
-    
+  
     /**
     Setups a dictionary that will be used to track how many times in a row each class has failed
     at updating its objects that need to be sent to the server.
@@ -351,9 +372,5 @@ class ServerAndClientSyncService {
         for (classKey, cls) in serverUpdateableClasses {
             blockToPerform(cls: cls, classKey: classKey)
         }
-    }
-    
-    private func handleNewObjectsReceivedFromServer(objects : Syncable, forClass cls : AnyClass) {
-      
     }
 }

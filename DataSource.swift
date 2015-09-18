@@ -48,7 +48,7 @@ public class DataSource: NSObject {
     /**
     The function to use when needing to delete an object from core data.
     
-    - parameter objects:           The objects to delete
+    - parameter objects: The objects to delete
     - returns: If the operation was successful.
     */
     public func deleteObjects(objects: [NSManagedObject]) -> Bool {
