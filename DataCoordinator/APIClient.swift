@@ -85,7 +85,7 @@ public extension APIClient{
             
             let config = NSURLSessionConfiguration.defaultSessionConfiguration()
             config.HTTPAdditionalHeaders = defaultHeaders
-            self.manager = Alamofire.Manager(configuration: config)
+            self.manager = Manager(configuration: config)
             completionHandler?(success: result.isSuccess)
             
         }
