@@ -30,32 +30,32 @@ public class APIClient: NSObject {
     
     
     
-    public func getDataForClass(classEndPoint : String, params:[String: AnyObject]? = nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?) -> (){
+    public func getDataForClass(classEndPoint : String, params:[String: AnyObject]? = nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject, statusCode:Int?) -> Void)?) -> (){
         self.manager.request(.GET, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
             (request, response, result) -> Void in
-            completionHandler?(success: result.isSuccess,result: result.value!)
+            completionHandler?(success: result.isSuccess,result: result.value!, statusCode:response?.statusCode)
         }
 
     }
     
-    public func postDataForClass(classEndPoint : String, params:[String: AnyObject]?=nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
+    public func postDataForClass(classEndPoint : String, params:[String: AnyObject]?=nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject, statusCode:Int?) -> Void)?)->() {
         self.manager.request(.POST, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
             (request, response, result) -> Void in
-            completionHandler?(success: result.isSuccess, result: result.value!)
+            completionHandler?(success: result.isSuccess, result: result.value!, statusCode:response?.statusCode)
         }
     }
     
-    public func putDataForClass(classEndPoint : String, params:[String: AnyObject]?=nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
+    public func putDataForClass(classEndPoint : String, params:[String: AnyObject]?=nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject, statusCode:Int?) -> Void)?)->() {
         self.manager.request(.PUT, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
-            (_, _, result)->Void in
-            completionHandler?(success: result.isSuccess, result: result.value!)
+            (request, response, result) -> Void in
+            completionHandler?(success: result.isSuccess, result: result.value!, statusCode:response?.statusCode)
         }
     }
     
-    public func deleteDataForClass(classEndPoint : String, params:[String: AnyObject]?=nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject) -> Void)?)->() {
+    public func deleteDataForClass(classEndPoint : String, params:[String: AnyObject]?=nil, headers:[String : String]?=nil, completionHandler:((success: Bool, result:AnyObject, statusCode:Int?) -> Void)?)->() {
         self.manager.request(.DELETE, self.baseUrl+classEndPoint, parameters:params, headers:headers).responseJSON {
-            (_, _, result)->Void in
-            completionHandler?(success: result.isSuccess, result: result.value!)
+            (request, response, result) -> Void in
+            completionHandler?(success: result.isSuccess, result: result.value!, statusCode:response?.statusCode)
         }
     }
 }
@@ -93,7 +93,7 @@ public extension APIClient{
     }
     
     public func invalidateAccessToken(completionHandler:((success:Bool, result:AnyObject)-> Void)?) ->() {
-        self.deleteDataForClass("users/token") { (success, result) -> Void in
+        self.deleteDataForClass("users/token") { (success, result, statusCode) -> Void in
             var headers = self.manager.session.configuration.HTTPAdditionalHeaders ?? [:]
             headers.removeValueForKey("Authorization")
         }
