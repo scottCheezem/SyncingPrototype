@@ -11,21 +11,18 @@ import CoreData
 public extension DataCoordinator {
 
     // MARK: User
+    
     public func currentUser() -> User? {
         let currentUserFetchRequest = NSFetchRequest(entityName: "User")
-        let currentUserPredicate = NSPredicate(format: "currentUser = %@", true)
+        let currentUserPredicate = NSPredicate(format: "currentUser == %@", true)
         currentUserFetchRequest.predicate = currentUserPredicate
-        if DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first != nil {
-            return DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User
+        if let user: User = DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User {
+            return user
         } else {
             return nil
         }
     }
     
-////    public func currentUserInContext(context: NSManagedObjectContext) -> User {
-////        
-////    }
-//
 //    public func currentUserAndConnectedUsers() -> [User]? {
 //        var userAndConnectedUsers = [User]()
 //        let user = currentUser()
@@ -111,9 +108,11 @@ public extension DataCoordinator {
 //            NSNotificationCenter.defaultCenter().postNotificationName(kBTBrushEventHasBeenCreated, object: cdEvents)
 //            deviceToUse.eventReadIndex = latestEvent.eventIndex
 //            deviceToUse.synchronizedAt = NSDate().BT_dateWithAppliedOffsetFromGMT()
-//        } else { // Virtual Event
+//        }
+//        // Virtual Event
+//        else {
 //            if notification.object != nil && !(notification.object!.isKindOfClass(BTBluetoothNotifier.self)) {
-//                //TODO check!!!!
+//                // TODO check!!!!
 //                let objectsArray = notification.object
 //                
 //                let user = objectsArray?.lastObject as! User
@@ -145,8 +144,8 @@ public extension DataCoordinator {
 //        let currentClientDeviceFetchRequest = NSFetchRequest(entityName: "ClientDevice")
 //        let currentClientDevicePredicate = NSPredicate(format: "currentDevice == %@", true)
 //        currentClientDeviceFetchRequest.predicate = currentClientDevicePredicate
-//        if DataSource.sharedInstance.executeFetchRequest(currentClientDeviceFetchRequest)?.first != nil {
-//            return DataSource.sharedInstance.executeFetchRequest(currentClientDeviceFetchRequest)?.first as? ClientDevice
+//        if let device: Device = DataSource.sharedInstance.executeFetchRequest(currentClientDeviceFetchRequest)?.first as? Device {
+//            return device
 //        } else {
 //            return nil
 //        }
@@ -173,5 +172,86 @@ public extension DataCoordinator {
 //    
 //    // MARK: ClientSession
 //    
+//    // MARK: ClientSoftware
 //    
+//    // MARK: Device
+//    
+//    public func firstDeviceForMacAddress(macAddress: String?) -> Device? {
+//        if macAddress != nil {
+//            let deviceFetchRequest = NSFetchRequest(entityName: "Device")
+//            let devicePredicate = NSPredicate(format: "macAddress CONTAINS[cd] %@", macAddress)
+//            let deviceSortDescriptors = NSSortDescriptor(key: "updatedAt", ascending: false)
+//            deviceFetchRequest.sortDescriptors = deviceSortDescriptors
+//            deviceFetchRequest = devicePredicate
+//            if let device: Device = DataSource.sharedInstance.executeFetchRequest(deviceFetchRequest)?.first as? Device {
+//                return device
+//            }
+//        }
+//        return nil
+//    }
+//    
+//    public func fetchObjectsForBTSetupDevices(setupDevices: [BTSetupDevice], completionHandler: (objects: [AnyObject]?) -> Void) -> () {
+//        var macAddresses = [String]()
+//        for device in setupDevices {
+//            macAddresses.append(device.brushData.macAddress)
+//        }
+//
+//        if macAddresses.count == 0 {
+//            print("macAddresses was empty")
+//            completionHandler(objects: nil)
+//        } else {
+//            var devices = Set(macAddresses)
+//            if devices.count == 0 {
+//                completionHandler(objects: Array(devices))
+//            }
+//            // Fetch objects from the server. If something fails, still return
+//            // what we have already fetched out of Core Data.
+//            
+////            else {
+////                // TODO Scott?
+////            }
+//        }
+//    }
+//    
+//    public func createDeviceFromSetupDevice(setupDevice: BTSetupDevice, user: User) -> Device? {
+//        let localUserFetchRequest = NSFetchRequest(entityName: "User")
+//        let localUserPredicate = NSPredicate(format: "userID == %@", user.userID)
+//        localUserFetchRequest.predicate = localUserPredicate
+//        if let user: User = DataSource.sharedInstance.executeFetchRequest(localUserFetchRequest)?.first as? User {
+//            let localUser = user
+//            let device = Device(setupDevice, user: user)
+//            return device
+//        }
+//        return nil
+//    }
+//    
+//    public func connectedDevices() -> Set<Device>? {
+//        var devices = Set<Device>
+//        if let users = currentUserAndConnectedUsers() {
+//            for user in users {
+//                if user.currentDevice {
+//                    devices.insert(user.currentDevice)
+//                }
+//            }
+//        }
+//        return devices
+//    }
+//    
+//    // MARK: UserShare
+//    
+//    public func filterForAcceptedUserShares(completionHandler: (objects: [AnyObject]?) -> Void) -> () {
+//        //TODO bt find all
+//    }
+//    
+//    public func findUserSharesAwaitingApproval(completionHandler: (objects: [AnyObject]?) -> Void) -> () {
+//        let userShares = [UserShare]()
+//        let userShareFetchRequest = NSFetchRequest(entityName: "UserShare")
+//        let userSharePredicate = NSPredicate(format: "receiver.userID == %@ AND accepted == false AND deletedAt == nil", currentUser().userID)
+//        userShareFetchRequest.predicate = userSharePredicate
+//        if let shares = DataSource.sharedInstance.executeFetchRequest(userShareFetchRequest) {
+//            userShares = shares
+//        }
+//        completionHandler(objects: userShares)
+//    }
+    
 }
