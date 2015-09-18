@@ -16,17 +16,24 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     /// Object that is used to interact with objects that are stored on the device.
     private let dataSource = DataSource()
     
+    private var apiClient : APIClient
+    
     /**
     Main Initializer
     
-    - parameter clientUpdateableClasses: Classes that will be can be updated on the device and sent to the server.
-    - parameter serverUpdateableClasses: Classes that can be updated on the server and sent to the device.
+    - parameter clientUpdateableClasses: Classes that will be can be 
+      updated on the device and sent to the server.
     
-    - returns: <#return value description#>
+    - parameter serverUpdateableClasses: Classes that can be updated 
+      on the server and sent to the device.
+    
+    - returns: Instance of data coordinator
     */
-    init(clientUpdateableClasses : [String : AnyClass], serverUpdateableClasses : [String : AnyClass]) {
+    init(withConfiguration configuration : Configurations) {
+        
+        apiClient = APIClient(aBaseUrl: configuration.baseURL)
         super.init()
-        serverAndClientSyncingService = ServerAndClientSyncService(withDataSource: self, networkService: self, serverUpdateableClasses: serverUpdateableClasses, andClientUpdateableClasses: clientUpdateableClasses)
+        serverAndClientSyncingService = ServerAndClientSyncService(withDataSource: self, networkService: self, serverUpdateableClasses: configuration.serverUpdateableClasses, andClientUpdateableClasses: configuration.clientUpdateableClasses)
     }
     /**
     Syncs all objects that are not updated on either the client or the server.
@@ -40,27 +47,59 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     //TODO:Decide where to implement these protocols
     //MARK: SyncingNetworkService 
-    internal func getObjectsFromServerOfClass(cls: AnyClass, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
-        
+    internal func getObjectsFromServerOfClass(cls: Updateable.Type, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
+       
     }
-    
     
     internal func postObjects(objects: [Updateable], withCompletion completion: (objects: [Updateable]?, error: NSError?) -> Void) {
         
     }
     
     //MARK: SyncingDataSource
-    public func saveObjects(objects: [DevicePersistedClass]) -> Bool {
-        let objectsToCreate = filterOutObjectsThatAreNew(objects)
-        let objectsToUpdate = filterOutObjectsThatAreBeingUpdated(objects)
-        let updatedObjectsToSave = savedObjectsUpdatedFromCounterparts(objectsToUpdate)
-        
-        let totalObjectsToSave = objectsToCreate + updatedObjectsToSave
-        let objectsToSaveCasted = totalObjectsToSave.map {$0 as! AnyObject}
     
-        let savedSuccessfully = dataSource.saveObjects(objectsToSaveCasted)
+    /**
+    Saves the passed in objects to the device.
+    
+    - parameter objects: Objects to save to the device.
+    
+    - returns: Bool indicating if the objects were successfully saved.
+    */
+    public func saveObjects(objects: [APIClass]) -> Bool {
         
-        return savedSuccessfully
+        let seperatedObjects = seperateObjectsIntoNewAndUpdatedArrays(objects)
+        
+        let allObjectsToSave = seperatedObjects.newObjects + seperatedObjects.updatedObjects
+        let allObjectsToSaveCasted = allObjectsToSave.map{$0 as! AnyObject}
+        
+        return self.dataSource.saveObjects(allObjectsToSaveCasted)
+    }
+    
+    /**
+    Seperates the passed in objects into objects that need to be 
+    updated and objects that are new for saving to the device.
+    
+    - parameter objects: Objects that need to configured and seperated for saving to the device.
+    
+    - returns: Tuple containing objects that will be newly saved to the device and objects that are being updated on the device.
+    */
+    private func seperateObjectsIntoNewAndUpdatedArrays(objects : [APIClass]) -> (newObjects : [APIClass], updatedObjects : [APIClass]) {
+        
+        var newObjects = [APIClass]()
+        var updatedObjects = [APIClass]()
+        
+        for object in objects {
+            let deviceCounterPartOptional = findCounterpartOnDeviceForObject(object)
+            if let deviceCounterPart = deviceCounterPartOptional {
+                
+                deviceCounterPart.updateWithContentsOfAPIClassObject(object)
+                updatedObjects.append(deviceCounterPart)
+                
+            } else {
+                newObjects.append(object)
+            }
+        }
+        
+        return (newObjects, updatedObjects)
     }
     
     /**
@@ -73,7 +112,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: objects that do not have a counterpart stored on the device.
     */
-    private func filterOutObjectsThatAreNew(objects : [DevicePersistedClass]) -> [DevicePersistedClass] {
+    private func filterOutObjectsThatAreNew(objects : [APIClass]) -> [APIClass] {
         let objectsNotYetPersisted = objects.filter {[weak self] in
             guard let weakself = self else {return false}
             return !weakself.objectIsPersistedOnDevice($0)
@@ -81,7 +120,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
         
         return objectsNotYetPersisted
     }
-
+    
     /**
     Filters out objects that have a counterpart stored on the database.
     
@@ -89,7 +128,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: Objects that have counterparts on the device.
     */
-    private func filterOutObjectsThatAreBeingUpdated(objects : [DevicePersistedClass]) -> [DevicePersistedClass] {
+    private func filterOutObjectsThatAreBeingUpdated(objects : [APIClass]) -> [APIClass] {
         let objectsThatArePersisted = objects.filter {[weak self] in
             guard let weakself = self else {return false}
             return !weakself.objectIsPersistedOnDevice($0)
@@ -105,11 +144,9 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: Bool indiciating if the object is stored on the device.
     */
-    private func objectIsPersistedOnDevice(object : DevicePersistedClass) -> Bool {
+    private func objectIsPersistedOnDevice(object : APIClass) -> Bool {
         
-        let classForObject : AnyObject.Type = object.dynamicType as! AnyObject.Type
-        let allObjectsCurrentlyStored = allObjectsOfClass(classForObject)
-        
+        let allObjectsCurrentlyStored = allObjectsOfClass(object.dynamicType)
         let counterpartObjects = allObjectsCurrentlyStored.filter {object.predicateForFindingThisObject().evaluateWithObject($0)}
         
         //We should never have more than one representation of an object on the device.
@@ -122,23 +159,39 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     }
     
     /**
+    Checks to see if the passed in object has a representation stored on the device and if it 
+    does returns that object.
     
-    Takes objects that have only been created in memory or from the server and uses their information
-    to update their counterparts that werre stored on the device.
+    - parameter object: Object needed to determine if it has a representation on the device.
     
-    - parameter counterPartObjects: Objects that will be used to configure their counterparts on the device.
-    
-    - returns: Objects that are from the device updated with the passed in parameter.
-    
+    - returns: Persisted version of the passed in object if it exists.
     */
-    private func savedObjectsUpdatedFromCounterparts(counterPartObjects : [DevicePersistedClass]) -> [DevicePersistedClass] {
+    private func findCounterpartOnDeviceForObject(object : APIClass) -> APIClass? {
         
-        return [DevicePersistedClass]()
+        let allObjectsCurrentlyStored = allObjectsOfClass(object.dynamicType)
+        
+        let counterpartObjects = allObjectsCurrentlyStored.filter {object.predicateForFindingThisObject().evaluateWithObject($0)}
+        
+        let objectToReturn = counterpartObjects.first as? APIClass
+        
+        //We should never have more than one representation of an object on the device.
+        guard counterpartObjects.count < 2 else {
+            assert(false, "passed in object has more than one instance on the device.")
+            return objectToReturn
+        }
+        
+        return objectToReturn
     }
+
+    /**
+    Deletes the objects if they were persisted on the device.
     
+    - parameter objects: objects that need to be deleted.
     
-    public func deleteObjects(objects: [DevicePersistedClass]) -> Bool {
-        return true
+    - returns: true if the objects were successfully deleted, false otherwise.
+    */
+    public func deleteObjects(objects: [APIClass]) -> Bool {
+        return dataSource.deleteObjects(objects)
     }
     
     /**
@@ -148,8 +201,9 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: All instances of that class that are stored on the device.
     */
-    public func allObjectsOfClass(cls: AnyClass) -> [AnyObject] {
-       let allObjectsOfClass = dataSource.allObjectsOfClass(cls)
+    public func allObjectsOfClass(cls: APIClass.Type) -> [AnyObject] {
+        
+       let allObjectsOfClass = dataSource.allObjectsOfClass(cls as! AnyClass)
        guard let allObjectsInClass = allObjectsOfClass else {
             return [AnyObject]()
        }

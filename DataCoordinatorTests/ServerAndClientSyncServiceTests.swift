@@ -35,6 +35,7 @@ class SyncableTestClass : UpdateableTestClass, Syncable {
     var serverUpdatedAt = NSDate()
     var clientUpdatedAt = NSDate()
     var serverCreatedAt = NSDate()
+    var deletedAt : NSDate? = NSDate()
 }
 
 class Car : SyncableTestClass {
@@ -82,7 +83,7 @@ class TestNetworkService: SyncingNetworkService {
         completion(objects: objects, error: nil)
     }
     
-    internal func getObjectsFromServerOfClass(cls: AnyClass, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
+    internal func getObjectsFromServerOfClass(cls: Updateable.Type, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
         guard !errorOutOnAllCalls else {
             
             let error = NSError(domain: "Testing", code: 001, userInfo: nil)
@@ -111,8 +112,8 @@ class TestNetworkService: SyncingNetworkService {
 class TestDataSource: SyncingDataSource {
     
     //Testing Methods
-    internal var savedObjects = [DevicePersistedClass]()
-    internal var deletedObjects = [DevicePersistedClass]()
+    internal var savedObjects = [APIClass]()
+    internal var deletedObjects = [APIClass]()
     
     private let cars : [Car]
     private let drivers : [Driver]
@@ -128,17 +129,17 @@ class TestDataSource: SyncingDataSource {
     }
     
     //SyncingDataSource Protocol
-    internal func saveObjects(objects: [DevicePersistedClass]) -> Bool {
+    internal func saveObjects(objects: [APIClass]) -> Bool {
         savedObjects.appendContentsOf(objects)
         return true
     }
     
-    internal func deleteObjects(objects: [DevicePersistedClass]) -> Bool {
+    internal func deleteObjects(objects: [APIClass]) -> Bool {
         deletedObjects.appendContentsOf(objects)
         return true
     }
     
-    internal func allObjectsOfClass(cls: AnyClass) -> [AnyObject] {
+    internal func allObjectsOfClass(cls: APIClass.Type) -> [AnyObject] {
         switch cls {
             
         case is Car.Type :
@@ -160,8 +161,8 @@ class ServerAndClientSyncTests : QuickSpec {
     
     override func spec() {
         
-        let clientUpdatableClasses : [String : AnyClass] = ["Car" : Car.self,"Driver" : Driver.self, "GasStation" : GasStation.self]
-        let serverUpdateableClasses : [String : AnyClass] = ["Car" : Car.self, "Mechanic" : Mechanic.self]
+        let clientUpdatableClasses : [String : Updateable.Type] = ["Car" : Car.self,"Driver" : Driver.self, "GasStation" : GasStation.self]
+        let serverUpdateableClasses : [String : Syncable.Type] = ["Car" : Car.self, "Mechanic" : Mechanic.self]
 
         describe("Sending objects to the server") {
 

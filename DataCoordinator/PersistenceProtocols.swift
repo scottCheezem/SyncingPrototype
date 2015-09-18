@@ -9,18 +9,21 @@
 import Foundation
 
 /**
-*  Protocol used for classes that will be persisted on the device.
+*  Protocol used for classes that are posted and or fetched from a server
 */
-public protocol DevicePersistedClass {
+public protocol APIClass {
+    func populateWithJson(jsonDict : NSDictionary)
+    func jsonRepresentation() -> NSDictionary
+    static var apiEndPointForClass : String { get set }
     /// Name of the property that is used to hold the primaryKeyValue
     static var primaryKeyTitle : String { get }
     /// Value for the property that is the primaryKey
     var primaryKeyValue : String { get }
 }
-internal extension DevicePersistedClass {
-    
+
+internal extension APIClass {
     /**
-    Method that returns a predicate used to retrieve this object from 
+    Method that returns a predicate used to retrieve this object from
     a selection
     
     - returns: Predicate used for filtering this object from a larger collection.
@@ -29,22 +32,26 @@ internal extension DevicePersistedClass {
         let predicateString = Self.primaryKeyTitle + "= %@"
         return NSPredicate(format: predicateString, argumentArray: [primaryKeyValue])
     }
-}
-
-/**
-*  Protocol used for classes that are posted and or fetched from a server
-*/
-public protocol APIClass {
-    func populateWithJson(jsonDict : NSDictionary)
-    func jsonRepresentation() -> NSDictionary
-    static var apiEndPointForClass : String { get set }
+    
+    /**
+    Updates the called object with the content of the passed in object.
+    
+    - parameter apiClassObject: object whose properties will update the called object.
+    */
+    internal func updateWithContentsOfAPIClassObject(apiClassObject : APIClass) {
+        
+        guard apiClassObject.primaryKeyValue == primaryKeyValue else { return }
+        
+        let jsonForUpdatingObject = apiClassObject.jsonRepresentation()
+        populateWithJson(jsonForUpdatingObject)
+    }
 }
 
 /**
 *  Protocol used for classes that can updated from client to server.
 */
 //TODO: Change the name of this and Syncable
-protocol Updateable: APIClass, DevicePersistedClass {
+public protocol Updateable: APIClass {
     var clientCreatedAt : NSDate { get set }
     var updatedOnClientAndServer : Bool { get set }
 }
@@ -52,10 +59,11 @@ protocol Updateable: APIClass, DevicePersistedClass {
 /**
 *  Protocol for classes that can be created and passed between the client and the server.
 */
-protocol Syncable: Updateable {
+public protocol Syncable: Updateable {
     var serverUpdatedAt : NSDate { get set }
     var clientUpdatedAt : NSDate { get set }
-    var serverCreatedAt : NSDate { get set }    
+    var serverCreatedAt : NSDate { get set }
+    var deletedAt : NSDate? { get set }
 }
 
 extension NSDate {
