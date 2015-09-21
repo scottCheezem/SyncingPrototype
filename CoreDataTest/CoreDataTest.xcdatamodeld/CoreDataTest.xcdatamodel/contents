@@ -8,7 +8,6 @@
         <attribute name="serverCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="serverUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
     </entity>
-    <fetchRequest name="FetchAllUsers" entity="User"/>
     <elements>
         <element name="User" positionX="-63" positionY="-18" width="128" height="135"/>
     </elements>

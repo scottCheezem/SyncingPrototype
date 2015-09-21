@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import DataCoordinator
 
 public class User: NSManagedObject, Syncable {
     
