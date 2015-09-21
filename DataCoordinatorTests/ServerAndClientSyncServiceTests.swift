@@ -15,7 +15,7 @@ import Quick
 class UpdateableTestClass: Updateable {
     
     static var primaryKeyTitle = "doesntMatter"
-    
+    static var name = "AlsoDoesntMatter"
     func populateWithJson(jsonDict: NSDictionary) {
         
     }
@@ -129,14 +129,14 @@ class TestDataSource: SyncingDataSource {
     }
     
     //SyncingDataSource Protocol
-    internal func saveObjects(objects: [APIClass]) -> Bool {
+    internal func saveObjects(objects: [APIClass]) -> [AnyObject]? {
         savedObjects.appendContentsOf(objects)
-        return true
+        return [AnyObject]()
     }
     
-    internal func deleteObjects(objects: [APIClass]) -> Bool {
+    internal func deleteObjects(objects: [APIClass]) -> [AnyObject]? {
         deletedObjects.appendContentsOf(objects)
-        return true
+        return [AnyObject]()
     }
     
     internal func allObjectsOfClass(cls: APIClass.Type) -> [AnyObject] {

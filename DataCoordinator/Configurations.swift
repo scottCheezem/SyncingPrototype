@@ -24,10 +24,8 @@ public struct Configurations {
     public var baseURL : String
     
     /// Dictionary of classes that the coordinator will update from the server when synchronizing data.
-    /// - warning: These Classes must conform to the Syncable protocol.
     public var serverUpdateableClasses : [String : Syncable.Type]
     
     /// Dictionary of classes that the coordinator will update from the client when syncronizing data.
-    ///  - warning: These Classes must conform to the Updateable protocol.
     public var clientUpdateableClasses : [String : Updateable.Type]
 }

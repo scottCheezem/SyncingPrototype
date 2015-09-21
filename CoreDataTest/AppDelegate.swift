@@ -10,6 +10,7 @@ import UIKit
 import DataCoordinator
 
 @UIApplicationMain
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var dataCoordinator: DataCoordinator?
     var window: UIWindow?
@@ -49,6 +50,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
         DataSource.sharedInstance.save()
+    }
+    
+    func objectsListeningToWhereDeleted(deletedObjects: [Syncable]) {
+        
+    }
+    
+    func objectsListeningToWereUpdatedOrCreated(newOrUpdatedObjects: [Syncable]) {
+        
+    }
+}
+
+class JustWorkOnce : SyncableTypeUpdateListener {
+    func objectsListeningToWhereDeleted(deletedObjects: [Syncable]) {
+        
+    }
+    func objectsListeningToWereUpdatedOrCreated(newOrUpdatedObjects: [Syncable]) {
+        
     }
 }
 
