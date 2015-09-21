@@ -25,7 +25,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func getUsers() {
-        users = DataCoordinator.allObjectsOfClass(User as APIClass.Type) as! [User]
+//        users = DataCoordinator.allObjectsOfClass(User as APIClass.Type) as! [User]
             //DataSource.sharedInstance.allObjectsOfClass(User.self) as! [User]
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.tableView.reloadData()
