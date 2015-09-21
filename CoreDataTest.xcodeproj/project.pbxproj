@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		060084BE1BB037D4008CFBC6 /* APIClient+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */; settings = {ASSET_TAGS = (); }; };
 		0650EDCA1BA1E0EE00E83AD4 /* DataCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0650EDD11BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; };
 		0650EDD81BA1E0EE00E83AD4 /* DataCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0650EDD71BA1E0EE00E83AD4 /* DataCoordinatorTests.swift */; };
@@ -180,6 +181,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "APIClient+Authentication.swift"; sourceTree = "<group>"; };
 		0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataCoordinator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataCoordinator.h; sourceTree = "<group>"; };
 		0650EDCB1BA1E0EE00E83AD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 				C8C2CFA81BA212990052F0C1 /* PersistenceProtocols.swift */,
 				0650EE0F1BA2123700E83AD4 /* APIClient.swift */,
 				35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */,
+				060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */,
 			);
 			path = DataCoordinator;
 			sourceTree = "<group>";
@@ -604,6 +607,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				060084BE1BB037D4008CFBC6 /* APIClient+Authentication.swift in Sources */,
 				35F31F911BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */,
 				0650EE061BA1E7D300E83AD4 /* DataCoordinator.swift in Sources */,
 				06D8FC571BACAF8E00F1FDAB /* Result.swift in Sources */,
