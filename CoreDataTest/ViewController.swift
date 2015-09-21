@@ -10,14 +10,16 @@ import UIKit
 import DataCoordinator
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-
+    var dataCordinator : DataCoordinator!
     @IBOutlet weak var tableView: UITableView!
     
     var users = [User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        dataCordinator = (UIApplication.sharedApplication().delegate as! AppDelegate).dataCoordinator
+        
+        
         getUsers()
         
         tableView.dataSource = self
@@ -25,8 +27,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func getUsers() {
-//        users = DataCoordinator.allObjectsOfClass(User as APIClass.Type) as! [User]
-            //DataSource.sharedInstance.allObjectsOfClass(User.self) as! [User]
+        users = dataCordinator.allObjectsOfClass(User) as! [User]
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             self.tableView.reloadData()
         }

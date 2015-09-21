@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        var conf = Configurations();//baseURL:"", serverUpdateableClasses:[:], clientUpdateableClasses:[:])
+        var conf = Configurations();
         conf.baseURL = "https://staging.beam.dental/api/v1/"
         dataCoordinator =  DataCoordinator(withConfiguration: conf)
         
