@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		060867281BB0A4F700D817C3 /* APIClient+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */; settings = {ASSET_TAGS = (); }; };
 		0650EDCA1BA1E0EE00E83AD4 /* DataCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0650EDD11BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; };
 		0650EDD81BA1E0EE00E83AD4 /* DataCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0650EDD71BA1E0EE00E83AD4 /* DataCoordinatorTests.swift */; };
@@ -605,6 +606,7 @@
 				06D8FC5A1BACAF8E00F1FDAB /* Upload.swift in Sources */,
 				06D8FC561BACAF8E00F1FDAB /* ResponseSerialization.swift in Sources */,
 				06D8FC4F1BACAF8E00F1FDAB /* Download.swift in Sources */,
+				060867281BB0A4F700D817C3 /* APIClient+Authentication.swift in Sources */,
 				06D8FC521BACAF8E00F1FDAB /* Manager.swift in Sources */,
 				0650EDEB1BA1E31100E83AD4 /* CoreDataManager.swift in Sources */,
 			);

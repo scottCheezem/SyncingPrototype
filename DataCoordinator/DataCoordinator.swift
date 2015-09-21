@@ -16,7 +16,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     /// Object that is used to interact with objects that are stored on the device.
     private let dataSource = DataSource()
     
-    private var apiClient : APIClient
+    public var apiClient : APIClient
     
     /**
     Main Initializer
