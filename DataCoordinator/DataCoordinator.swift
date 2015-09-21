@@ -64,14 +64,13 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: Bool indicating if the objects were successfully saved.
     */
-    public func saveObjects(objects: [APIClass]) -> Bool {
+    public func saveObjects(objects: [APIClass]) -> [AnyObject]? {
         
         let seperatedObjects = seperateObjectsIntoNewAndUpdatedArrays(objects)
         
         let allObjectsToSave = seperatedObjects.newObjects + seperatedObjects.updatedObjects
-        let allObjectsToSaveCasted = allObjectsToSave.map{$0 as! AnyObject}
         
-        return self.dataSource.saveObjects(allObjectsToSaveCasted)
+        return self.dataSource.saveObjects(allObjectsToSave)
     }
     
     /**
@@ -190,7 +189,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: true if the objects were successfully deleted, false otherwise.
     */
-    public func deleteObjects(objects: [APIClass]) -> Bool {
+    public func deleteObjects(objects: [APIClass]) -> [AnyObject]? {
         return dataSource.deleteObjects(objects)
     }
     
@@ -203,7 +202,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     */
     public func allObjectsOfClass(cls: APIClass.Type) -> [AnyObject] {
         
-       let allObjectsOfClass = dataSource.allObjectsOfClass(cls as! AnyClass)
+       let allObjectsOfClass = dataSource.allObjectsOfClass(cls)
        guard let allObjectsInClass = allObjectsOfClass else {
             return [AnyObject]()
        }

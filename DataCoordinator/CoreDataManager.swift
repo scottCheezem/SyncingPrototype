@@ -24,6 +24,18 @@ public class CoreDataManager: NSObject {
         super.init()
         self.managedObjectContext
     }
+    
+    // MARK: Properties
+    
+    /// The managedObjectContext.insertedObjects
+    var insertedObjectsNotSaved: [AnyObject]? {
+        return Array(managedObjectContext.insertedObjects)
+    }
+    
+    /// The managedObjectContext.deletedObjects
+    var deletedObjectsNotSaved: [AnyObject]? {
+        return Array(managedObjectContext.deletedObjects)
+    }
 
     // MARK: Core Data stack
 
@@ -96,27 +108,28 @@ public class CoreDataManager: NSObject {
     func cleanCoreData() -> Bool {
         print("Cleaning the core data database")
         
-        var success: Bool = false
+        var success: Bool = true
         
-        let userFetchRequest = NSFetchRequest.init(entityName: "User")
-        userFetchRequest.includesPropertyValues = false // only managedObjectID
-        
-        //var users = [User]()
+        for entity in managedObjectModel.entities {
+            let fetchRequest = NSFetchRequest.init(entityName: entity.name!)
+            fetchRequest.includesPropertyValues = false // only managedObjectID
+            
+            var objects = [AnyObject]()
 
-        managedObjectContext.performBlockAndWait { () -> Void in
-            do {
-//                users = try self.managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
-                success = true
-            } catch let error as NSError {
-                success = false
-                print("An error has occurred while fetching " + error.description)
+            managedObjectContext.performBlockAndWait { () -> Void in
+                do {
+                    objects = try self.managedObjectContext.executeFetchRequest(fetchRequest)
+                } catch let error as NSError {
+                    success = false
+                    print("An error has occurred while fetching " + error.description)
+                }
             }
-        }
-        
-        managedObjectContext.performBlockAndWait { () -> Void in
-//            for user in users {
-//                self.managedObjectContext.deleteObject(user)
-//            }
+            
+            managedObjectContext.performBlockAndWait { () -> Void in
+                for object in objects {
+                    self.managedObjectContext.deleteObject(object as! NSManagedObject)
+                }
+            }
         }
         
         if save() && success {
@@ -128,7 +141,7 @@ public class CoreDataManager: NSObject {
         }
         
 //        iOS 9
-//        let fetchRequest = NSFetchRequest(entityName: "User")
+//        let fetchRequest = NSFetchRequest(entityName: entity.name!)
 //        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
 //        
 //        do {

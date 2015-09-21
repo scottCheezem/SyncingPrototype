@@ -23,7 +23,8 @@ public class User: NSManagedObject, Syncable {
         clientCreatedAt = NSDate()
     }
     
-    static public var primaryKeyTitle : String = "userID"
+    static public var name: String = "User"
+    static public var primaryKeyTitle: String = "userID"
  
     // MARK: Properties
     
