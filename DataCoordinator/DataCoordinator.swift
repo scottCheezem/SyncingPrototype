@@ -29,7 +29,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     
     - returns: Instance of data coordinator
     */
-    init(withConfiguration configuration : Configurations) {
+    public init(withConfiguration configuration : Configurations) {
         
         apiClient = APIClient(aBaseUrl: configuration.baseURL)
         super.init()
