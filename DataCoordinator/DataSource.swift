@@ -12,6 +12,8 @@ public class DataSource: NSObject {
     
     public static let sharedInstance = DataSource()
     
+    // MARK: Saving
+    
     /**
     The function to use when needing to save the context.
     
@@ -29,36 +31,35 @@ public class DataSource: NSObject {
     The function to use when needing to save one or more objects into core data.
     
     - parameter objects:           The objects to save.
-    - returns: If the operation was successful.
+    - returns: The set of objects that have been inserted into the receiver but not yet saved in a persistent store.
     */
-    public func saveObjects(objects: [AnyObject]) -> Bool {
+    public func saveObjects(objects: [APIClass]) -> [AnyObject]? {
         for object in objects {
-            if object.isKindOfClass(User) {
-                let user = object as! User
-                user.clientUpdatedAt = NSDate()
+            if var sync = object as? Syncable {
+                sync.clientUpdatedAt = NSDate()
             }
         }
-        if CoreDataManager.shared.save() {
-            return true
-        } else {
-            return false
-        }
+        
+        CoreDataManager.shared.save()
+        
+        return CoreDataManager.shared.insertedObjectsNotSaved
     }
+    
+    // MARK: Deleting
     
     /**
     The function to use when needing to delete an object from core data.
     
     - parameter objects: The objects to delete
-    - returns: If the operation was successful.
+    - returns: The set of objects that will be removed from their persistent store during the next save operation.
     */
-    public func deleteObjects(objects: [APIClass]) -> Bool {
+    public func deleteObjects(objects: [APIClass]) -> [AnyObject]? {
         let nsManagedObjects = objects.map {$0 as! NSManagedObject}
-        if CoreDataManager.shared.deleteObjects(nsManagedObjects) {
-            return true
-        } else {
-            return false
-        }
+        CoreDataManager.shared.deleteObjects(nsManagedObjects)
+        return CoreDataManager.shared.deletedObjectsNotSaved
     }
+    
+    // MARK: Retrieving
     
     /**
     The function to use when needing all the core data objects of a class.
@@ -67,10 +68,12 @@ public class DataSource: NSObject {
     
     - returns: An array of core data objects.
     */
-    public func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
-        if cls == User.self {
-            let userFetchRequest = NSFetchRequest(entityName: "User")
-            return CoreDataManager.shared.executeFetchRequest(userFetchRequest)
+    public func allObjectsOfClass(cls: APIClass.Type) -> [AnyObject]? {
+        for entity in CoreDataManager.shared.managedObjectModel.entities {
+            if entity.name == cls.name {
+                let fetchRequest = NSFetchRequest(entityName: cls.name)
+                return CoreDataManager.shared.executeFetchRequest(fetchRequest)
+            }
         }
         return nil
     }
@@ -82,9 +85,11 @@ public class DataSource: NSObject {
     
     - returns: An array of optional core data objects.
     */
-    func executeFetchRequest(request:NSFetchRequest) -> [AnyObject]? {
+    func executeFetchRequest(request: NSFetchRequest) -> [AnyObject]? {
         return CoreDataManager.shared.executeFetchRequest(request)
     }
+    
+    // MARK: Managing
     
     /**
     This is the function to use when wiping core data objects.  This deletes all objects from core data.

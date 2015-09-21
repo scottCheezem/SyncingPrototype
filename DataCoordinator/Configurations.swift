@@ -11,7 +11,15 @@ import Foundation
 /**
 *  Class used to configure the DataCoordinator and its properties upon creation
 */
+
 public struct Configurations {
+    
+    public init(){
+        baseURL = ""
+        serverUpdateableClasses = [:]
+        clientUpdateableClasses = [:]
+    }
+    
     /// Represents the base URL for the API endpoint.
     public var baseURL : String
     

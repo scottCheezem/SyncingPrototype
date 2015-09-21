@@ -7,6 +7,7 @@
 //
 
 import CoreData
+import DataCoordinator
 
 public extension DataCoordinator {
 
@@ -16,7 +17,8 @@ public extension DataCoordinator {
         let currentUserFetchRequest = NSFetchRequest(entityName: "User")
         let currentUserPredicate = NSPredicate(format: "currentUser == %@", true)
         currentUserFetchRequest.predicate = currentUserPredicate
-        if let user: User = DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User {
+        if let user: User = self.allObjectsOfClass(User).first as? User{
+            //DataSource.sharedInstance.executeFetchRequest(currentUserFetchRequest)?.first as? User {
             return user
         } else {
             return nil

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import DataCoordinator
 
 public class User: NSManagedObject, Syncable {
     
@@ -22,7 +23,8 @@ public class User: NSManagedObject, Syncable {
         clientCreatedAt = NSDate()
     }
     
-    static public var primaryKeyTitle : String = "userID"
+    static public var name: String = "User"
+    static public var primaryKeyTitle: String = "userID"
  
     // MARK: Properties
     
@@ -56,8 +58,8 @@ public class User: NSManagedObject, Syncable {
     
     static public var apiEndPointForClass: String = "user"
     
-    // MARK: Computed Properties
-    
+//    // MARK: Computed Properties
+//    
 //    var brushColor: BTBrushColor {
 //        if self.currentDevice != nil {
 //            return self.currentDevice.brushColor
@@ -137,6 +139,29 @@ public class User: NSManagedObject, Syncable {
 //        return children
 //    }
 //    
+//    var currentDevice: Device? {
+//        let device: Device? = nil
+//
+//        let isMinePredicate = NSPredicate(format: "connectedUser.userID == %@", userID)
+//        let sortDescriptor = NSSortDescriptor(key: "updatedAt", ascending: false)
+//        let devicesFetchRequest = NSFetchRequest(entityName: "Device")
+//        devicesFetchRequest.predicate = isMinePredicate
+//        devicesFetchRequest.sortDescriptors = [sortDescriptor]
+//        let myDevices = DataSource.sharedInstance.executeFetchRequest(devicesFetchRequest)
+//        
+//        if let devices = myDevices {
+//            device = devices.first as? Device
+//            
+//            for dev in devices {
+//                if dev.macAddress != nil && dev.updatedAt == nil {
+//                    device = dev
+//                    break
+//                }
+//            }
+//        }
+//        return device
+//    }
+//    
 //    // MARK: Property Functions
 //    
 //    public func ownsDeviceDictionary(dictionary: Dictionary<String, String>, keys: [String], completionHandler: (value: Bool) -> Void) -> () {
@@ -153,6 +178,46 @@ public class User: NSManagedObject, Syncable {
 //        completionHandler(value: value)
 //    }
 //    
+//    public func currentUserChallengeWithBlock(block: UserChallengeBlock) {
+//        if overrideChallenge {
+//            if block {
+//                block(overrideChallenge)
+//            }
+//        } else {
+//            let filteredChallenges = [UserChallenge]()
+//            for challenge in challenges {
+//                if challenge.finishedAt == nil && (challenge.silent == nil || !challenge.silent) && challenge.current) {
+//                    filteredChallenges.append(challenge)
+//                }
+//            }
+//            
+//            let currentChallenge = filteredChallenges.firstObject;
+//            currentChallenge.type = BTChallengeTypeTextOnly;
+//            
+//            if currentChallenge.startedAt == nil {
+//                currentChallenge.startedAt = NSDate()
+//            }
+//            
+//            if block {
+//                block(currentChallenge)
+//            }
+//        }
+//    }
+//    
+//    public func connectedUsersWithUserShares(userShares: [UserShare]) {
+//        let acceptedUserShares = [UserShare]()
+//        for userShare in userShares {
+//            if userShare.accepted {
+//                acceptedUserShares.append(userShare)
+//            }
+//        }
+//        let connectedUsers = acceptedUserShares.BT_map:^User *(UserShare *userShare) {
+//            return userShare.nonCurrentUser;
+//        }
+//        
+//        return connectedUsers
+//    }
+//    
 //    // MARK: Internal
 //    
 //    func deviceMatchesUserInfo(userInfo: Dictionary<String, String>) -> Bool {
@@ -160,4 +225,29 @@ public class User: NSManagedObject, Syncable {
 //        let device = DataCoordinator.firstDeviceForMacAddress(macAddress)
 //        return device != nil && device.connectedUser && device.connectedUser.userID == userID
 //    }
+//    
+//    func compareWithUser(otherUser: User) -> NSComparisonResult {
+//        // Return the users sorted based on '_firstName'. This will make sure the
+//        // order is always consistently the same in a way that makes sense for the
+//        // end user.
+//        if isSharedUser && !otherUser.isSharedUser {
+//            return .OrderedDescending
+//        } else if !isSharedUser && otherUser.isSharedUser {
+//            return .OrderedAscending;
+//        } else {
+//            return firstName.compare(otherUser.firstName)
+//        }
+//    }
+//    
+//    /**
+//    If the user full fledged, '_currentUser' is set to 'YES'
+//    */
+//    func markAsCurrentUserIfNecessary {
+//        if isFullFledged {
+//            // Set the current user that way we can easily retrieve the record in
+//            // '+[User currentUser]'
+//            currentUser = true
+//        }
+//    }
+    
 }

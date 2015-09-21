@@ -10,11 +10,18 @@ import UIKit
 import DataCoordinator
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, SyncableTypeUpdateListener {
 
+class AppDelegate: UIResponder, UIApplicationDelegate {
+    var dataCoordinator: DataCoordinator?
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        var conf = Configurations();
+        conf.baseURL = "https://staging.beam.dental/api/v1/"
+        dataCoordinator =  DataCoordinator(withConfiguration: conf)
+        
+
         // Override point for customization after application launch.
         return true
     }
