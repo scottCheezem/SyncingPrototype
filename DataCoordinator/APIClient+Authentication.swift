@@ -6,6 +6,9 @@
 //
 //
 
+import DataCoordinator
+
+
 public extension APIClient{
     public func authenticate(username: String, password: String, completionHandler:((success: Bool) -> Void)? ) ->(){
         let grantType = "password"
