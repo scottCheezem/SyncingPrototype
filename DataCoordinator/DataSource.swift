@@ -33,10 +33,10 @@ public class DataSource: NSObject {
     */
     public func saveObjects(objects: [AnyObject]) -> Bool {
         for object in objects {
-            if object.isKindOfClass(User) {
-                let user = object as! User
-                user.clientUpdatedAt = NSDate()
-            }
+//            if object.isKindOfClass(User) {
+//                let user = object as! User
+//                user.clientUpdatedAt = NSDate()
+//            }
         }
         if CoreDataManager.shared.save() {
             return true
@@ -68,10 +68,10 @@ public class DataSource: NSObject {
     - returns: An array of core data objects.
     */
     public func allObjectsOfClass(cls: AnyClass) -> [AnyObject]? {
-        if cls == User.self {
-            let userFetchRequest = NSFetchRequest(entityName: "User")
-            return CoreDataManager.shared.executeFetchRequest(userFetchRequest)
-        }
+//        if cls == User.self {
+//            let userFetchRequest = NSFetchRequest(entityName: "User")
+//            return CoreDataManager.shared.executeFetchRequest(userFetchRequest)
+//        }
         return nil
     }
     

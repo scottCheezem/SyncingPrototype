@@ -101,11 +101,11 @@ public class CoreDataManager: NSObject {
         let userFetchRequest = NSFetchRequest.init(entityName: "User")
         userFetchRequest.includesPropertyValues = false // only managedObjectID
         
-        var users = [User]()
+        //var users = [User]()
 
         managedObjectContext.performBlockAndWait { () -> Void in
             do {
-                users = try self.managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
+//                users = try self.managedObjectContext.executeFetchRequest(userFetchRequest) as! [User]
                 success = true
             } catch let error as NSError {
                 success = false
@@ -114,9 +114,9 @@ public class CoreDataManager: NSObject {
         }
         
         managedObjectContext.performBlockAndWait { () -> Void in
-            for user in users {
-                self.managedObjectContext.deleteObject(user)
-            }
+//            for user in users {
+//                self.managedObjectContext.deleteObject(user)
+//            }
         }
         
         if save() && success {
