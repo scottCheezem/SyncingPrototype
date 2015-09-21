@@ -98,8 +98,6 @@ public extension APIClient{
             headers.removeValueForKey("Authorization")
         }
     }
-    
-    
 
 }
 
