@@ -24,6 +24,18 @@ public class CoreDataManager: NSObject {
         super.init()
         self.managedObjectContext
     }
+    
+    // MARK: Properties
+    
+    /// The managedObjectContext.insertedObjects
+    var insertedObjectsNotSaved: [AnyObject]? {
+        return Array(managedObjectContext.insertedObjects)
+    }
+    
+    /// The managedObjectContext.deletedObjects
+    var deletedObjectsNotSaved: [AnyObject]? {
+        return Array(managedObjectContext.deletedObjects)
+    }
 
     // MARK: Core Data stack
 

@@ -24,11 +24,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         tableView.delegate = self
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     func getUsers() {
         users = DataSource.sharedInstance.allObjectsOfClass(User.self) as! [User]
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
@@ -50,17 +45,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if DataSource.sharedInstance.deleteObjects([users[indexPath.row]]) {
-            getUsers()
-        }
+        DataSource.sharedInstance.deleteObjects([users[indexPath.row]])
+        getUsers()
     }
 
     @IBAction func buttonPressed(sender: AnyObject) {
         let newUser: User = User()
         newUser.firstName = "Adam"
-        if DataSource.sharedInstance.saveObjects([newUser]) {
-            getUsers()
-        }
+        DataSource.sharedInstance.saveObjects([newUser])
+        getUsers()
     }
 
     @IBAction func resetButtonPressed(sender: AnyObject) {

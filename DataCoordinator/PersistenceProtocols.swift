@@ -12,6 +12,7 @@ import Foundation
 *  Protocol used for classes that are posted and or fetched from a server
 */
 public protocol APIClass {
+    static var name : String { get set }
     func populateWithJson(jsonDict : NSDictionary)
     func jsonRepresentation() -> NSDictionary
     static var apiEndPointForClass : String { get set }

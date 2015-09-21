@@ -15,8 +15,8 @@ import Foundation
     of a ServerAndClientSyncService.
 */
 protocol SyncingDataSource {
-    func saveObjects(objects : [APIClass]) -> Bool
-    func deleteObjects(objects : [APIClass]) -> Bool
+    func saveObjects(objects : [APIClass]) -> [AnyObject]?
+    func deleteObjects(objects : [APIClass]) -> [AnyObject]?
     func allObjectsOfClass(cls : APIClass.Type) -> [AnyObject]
 }
 
