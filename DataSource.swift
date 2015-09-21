@@ -71,8 +71,8 @@ public class DataSource: NSObject {
     public func allObjectsOfClass(cls: APIClass.Type) -> [AnyObject]? {
         for entity in CoreDataManager.shared.managedObjectModel.entities {
             if entity.name == cls.name {
-                let userFetchRequest = NSFetchRequest(entityName: cls.name)
-                return CoreDataManager.shared.executeFetchRequest(userFetchRequest)
+                let fetchRequest = NSFetchRequest(entityName: cls.name)
+                return CoreDataManager.shared.executeFetchRequest(fetchRequest)
             }
         }
         return nil
