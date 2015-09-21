@@ -47,7 +47,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     //TODO:Decide where to implement these protocols
     //MARK: SyncingNetworkService 
     internal func getObjectsFromServerOfClass(cls: Updateable.Type, withCompletion completion: (objects: [Syncable]?, error: NSError?) -> Void) {
-        apiClient.getDataForClass(cls.apiEndPointForClass) { succeeded, objects in
+        apiClient.getDataForClass(cls.apiEndPointForClass) { succeeded, objects, statusCode in
             guard succeeded else {
                 let error = NSError(domain: "NetworkError", code: 001, userInfo: nil)
                 completion(objects: nil, error: error)
