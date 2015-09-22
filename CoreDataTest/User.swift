@@ -27,8 +27,6 @@ class User: NSManagedObject, Syncable {
     static var primaryKeyTitle: String = "userID"
  
     // MARK: Properties
-    
-    @NSManaged var firstName: String
     @NSManaged var serverUpdatedAt: NSDate
     @NSManaged var clientUpdatedAt: NSDate
     @NSManaged var serverCreatedAt: NSDate
@@ -38,20 +36,49 @@ class User: NSManagedObject, Syncable {
     // MARK: Class Functions
 
     func populateWithJson(jsonDict: NSDictionary) {
-        firstName = jsonDict["first_name"] as! String
         
+        //might need to check if a key exists or has value with something like if prop = jsonDict["key"]{..}
+        userID = jsonDict["id"] as? String
+        firstName = jsonDict["first_name"] as! String
+        lastName = jsonDict["last_name"] as? String
+        brushColor = jsonDict["color"] as? String
+        imageUrl = jsonDict["picture_url"] as? String
+        gender = jsonDict["sex"] as? String
+        zipCode = jsonDict["postal_code"] as? String
+        email = jsonDict["email"] as? String
+        motorSpeedPercentage = jsonDict["motor_speed"] as? NSNumber
+        autoOffTimerEnabled = jsonDict["auto_off"] as? NSNumber //would casting to bool be the right choice here?
+        quadrantTimerEnabled = jsonDict["quadrant_buzz"] as? NSNumber
+        birthday = NSDate.parse((jsonDict["dob"] as? String)!)
+        imageChangedOn = NSDate.parse((jsonDict["picture_changed"] as? String)!)
         serverCreatedAt = NSDate.parse((jsonDict["created_at"] as? String)!)
         serverUpdatedAt = NSDate.parse((jsonDict["updated_at"] as? String)!)
+        
     }
     
     var primaryKeyValue : String {
         get {
-            return "EventuallyTheUserID"
+            return userID!
         }
     }
     
     func jsonRepresentation() -> NSDictionary {
-        return ["first_name": firstName, "created_at": clientCreatedAt.toString(), "updated_at": clientCreatedAt.toString()]
+        return [
+            "first_name": firstName,
+            "created_at": clientCreatedAt.toString(),
+            "updated_at": clientCreatedAt.toString(),
+            "last_name" : lastName!,
+            "postal_code" : zipCode!,
+            "dob" : birthday!.toString(),
+            "sex":  gender!,
+            "motor_speed" : motorSpeedPercentage!.stringValue,
+            "auto_off" : autoOffTimerEnabled!.boolValue,
+            "quadrant_buzz" : quadrantTimerEnabled!.boolValue,
+            "id":userID!,
+            "picture_changed" : imageChangedOn!.toString(),
+            "postal_code" : zipCode!,
+            "email" : email!
+        ]
     }
     
     // MARK: API Endpoint
@@ -61,8 +88,10 @@ class User: NSManagedObject, Syncable {
     //MARK: Class specific properties
     
     @NSManaged var motorSpeedPercentage : NSNumber?
+    @NSManaged var brushColor : NSString?
     @NSManaged var email : String?
     @NSManaged var gender : String?
+    @NSManaged var firstName: String
     @NSManaged var lastName : String?
     @NSManaged var pusherID : String?
     @NSManaged var userID : String?
@@ -73,10 +102,8 @@ class User: NSManagedObject, Syncable {
     @NSManaged var quadrantTimerEnabled : NSNumber?
     @NSManaged var birthday : NSDate?
     @NSManaged var imageChangedOn : NSDate?
+    @NSManaged var imageUrl : NSString?
     @NSManaged var devices: NSSet?
-    
-    
-    
     
     
 //    // MARK: Computed Properties

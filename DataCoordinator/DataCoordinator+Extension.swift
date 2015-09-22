@@ -9,11 +9,11 @@
 import CoreData
 import DataCoordinator
 
-public extension DataCoordinator {
+extension DataCoordinator {
 
     // MARK: User
     
-    public func currentUser() -> User? {
+    func currentUser() -> User? {
         let currentUserFetchRequest = NSFetchRequest(entityName: "User")
         let currentUserPredicate = NSPredicate(format: "currentUser == %@", true)
         currentUserFetchRequest.predicate = currentUserPredicate
