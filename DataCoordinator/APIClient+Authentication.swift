@@ -6,10 +6,10 @@
 //
 //
 
-import DataCoordinator
+import DataCoordinator//disable this import to work with PlayGround
 
 
-public extension APIClient{
+extension APIClient{
     public func authenticate(username: String, password: String, completionHandler:((success: Bool) -> Void)? ) ->(){
         let grantType = "password"
         let authDic:[String:String] = ["password":password, "username":username, "grant_type":grantType]
