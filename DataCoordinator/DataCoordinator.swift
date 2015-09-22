@@ -17,6 +17,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     private let dataSource = DataSource()
     
     private var apiClient : APIClient
+    
     /**
     Main Initializer
     
@@ -34,6 +35,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
         super.init()
         serverAndClientSyncingService = ServerAndClientSyncService(withDataSource: self, networkService: self, serverUpdateableClasses: configuration.serverUpdateableClasses, andClientUpdateableClasses: configuration.clientUpdateableClasses)
     }
+    
     /**
     Syncs all objects that are not updated on either the client or the server.
     

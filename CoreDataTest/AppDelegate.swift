@@ -61,12 +61,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-class JustWorkOnce : SyncableTypeUpdateListener {
-    func objectsListeningToWhereDeleted(deletedObjects: [Syncable]) {
-        
-    }
-    func objectsListeningToWereUpdatedOrCreated(newOrUpdatedObjects: [Syncable]) {
-        
-    }
-}
-
