@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		060867281BB0A4F700D817C3 /* APIClient+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */; settings = {ASSET_TAGS = (); }; };
+		0608673A1BB0B93C00D817C3 /* BrushEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060867361BB0B93C00D817C3 /* BrushEvent.swift */; settings = {ASSET_TAGS = (); }; };
+		0608673C1BB0B93C00D817C3 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060867381BB0B93C00D817C3 /* Device.swift */; settings = {ASSET_TAGS = (); }; };
 		0650EDCA1BA1E0EE00E83AD4 /* DataCoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0650EDD11BA1E0EE00E83AD4 /* DataCoordinator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */; };
 		0650EDD81BA1E0EE00E83AD4 /* DataCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0650EDD71BA1E0EE00E83AD4 /* DataCoordinatorTests.swift */; };
@@ -46,8 +47,6 @@
 		35F31F921BA34D7600B8CCA5 /* NSManagedObject+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F31F901BA34D7600B8CCA5 /* NSManagedObject+Extension.swift */; settings = {ASSET_TAGS = (); }; };
 		C87573991BA85C1600EF7FC2 /* ServerAndClientSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87573981BA85C1600EF7FC2 /* ServerAndClientSyncServiceTests.swift */; settings = {ASSET_TAGS = (); }; };
 		C8A8133E1BB0A37F0075A67A /* DataPersistanceUpdateNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F192481BB0366C003AC9D4 /* DataPersistanceUpdateNotifier.swift */; settings = {ASSET_TAGS = (); }; };
-		C8A925671BA9B3A8008B7ECE /* Nimble.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C875738E1BA8596900EF7FC2 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C8A9256B1BA9B3AF008B7ECE /* Quick.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C875737B1BA8593700EF7FC2 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C8BB90A71BA9A52800DAA03B /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C87573811BA8593700EF7FC2 /* Quick.framework */; };
 		C8BB90A81BA9A53500DAA03B /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C875738E1BA8596900EF7FC2 /* Nimble.framework */; };
 		C8C2CFA11BA2107C0052F0C1 /* ServerAndClientSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C2CFA01BA2107C0052F0C1 /* ServerAndClientSyncService.swift */; settings = {ASSET_TAGS = (); }; };
@@ -169,6 +168,8 @@
 
 /* Begin PBXFileReference section */
 		060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "APIClient+Authentication.swift"; path = "../DataCoordinator/APIClient+Authentication.swift"; sourceTree = "<group>"; };
+		060867361BB0B93C00D817C3 /* BrushEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrushEvent.swift; sourceTree = "<group>"; };
+		060867381BB0B93C00D817C3 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		0650EDC71BA1E0EE00E83AD4 /* DataCoordinator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DataCoordinator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0650EDC91BA1E0EE00E83AD4 /* DataCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DataCoordinator.h; sourceTree = "<group>"; };
 		0650EDCB1BA1E0EE00E83AD4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -327,6 +328,8 @@
 		35AA86001BA0A168004DA80D /* CoreDataTest */ = {
 			isa = PBXGroup;
 			children = (
+				060867361BB0B93C00D817C3 /* BrushEvent.swift */,
+				060867381BB0B93C00D817C3 /* Device.swift */,
 				35E9F7651BA8735300860961 /* DataCoordinator+Extension.swift */,
 				060084BD1BB037D4008CFBC6 /* APIClient+Authentication.swift */,
 				0650EE111BA2138000E83AD4 /* CoreDataTest.xcdatamodeld */,
@@ -616,7 +619,6 @@
 				06D8FC5A1BACAF8E00F1FDAB /* Upload.swift in Sources */,
 				06D8FC561BACAF8E00F1FDAB /* ResponseSerialization.swift in Sources */,
 				06D8FC4F1BACAF8E00F1FDAB /* Download.swift in Sources */,
-				060867281BB0A4F700D817C3 /* APIClient+Authentication.swift in Sources */,
 				06D8FC521BACAF8E00F1FDAB /* Manager.swift in Sources */,
 				0650EDEB1BA1E31100E83AD4 /* CoreDataManager.swift in Sources */,
 			);
@@ -641,11 +643,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0673C4141BB086E30069AA72 /* User.swift in Sources */,
+				0608673A1BB0B93C00D817C3 /* BrushEvent.swift in Sources */,
 				35AA86041BA0A168004DA80D /* ViewController.swift in Sources */,
 				0650EE141BA2252700E83AD4 /* CoreDataTest.xcdatamodeld in Sources */,
 				35AA86021BA0A168004DA80D /* AppDelegate.swift in Sources */,
 				0673C4201BB08B0D0069AA72 /* DataCoordinator+Extension.swift in Sources */,
 				0673C4211BB08D350069AA72 /* APIClient+Authentication.swift in Sources */,
+				0608673C1BB0B93C00D817C3 /* Device.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="14F27" minimumToolsVersion="Automatic">
+    <entity name="BrushEvent" representedClassName=".BrushEvent" syncable="YES">
+        <attribute name="brushEventID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="brushEventType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="clientCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="clientUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="customData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="deletedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="endTime" attributeType="Date" syncable="YES"/>
+        <attribute name="serverCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="serverUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="startTime" attributeType="Date" syncable="YES"/>
+        <attribute name="updatedOnClientAndServer" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="device" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Device" inverseName="brushEvents" inverseEntity="Device" syncable="YES"/>
+    </entity>
+    <entity name="Device" representedClassName=".Device" syncable="YES">
+        <attribute name="batteryLevelPercentage" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="bluetoothID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="clientCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="clientUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="colorInt" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="deletedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="deviceID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="eventReadIndex" optional="YES" attributeType="Integer 16" syncable="YES"/>
+        <attribute name="firmwareRevision" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hardwareRevision" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="initialSetup" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="macAddress" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="resetAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="serverCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="serverUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="synchronizedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="updatedOnClientAndServer" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="brushEvents" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="BrushEvent" inverseName="device" inverseEntity="BrushEvent" syncable="YES"/>
+        <relationship name="connectedUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="devices" inverseEntity="User" syncable="YES"/>
+    </entity>
     <entity name="User" representedClassName=".User" syncable="YES">
         <attribute name="clientCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="clientUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
@@ -7,9 +43,12 @@
         <attribute name="isFullySynced" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="serverCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="serverUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="devices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Device" inverseName="connectedUser" inverseEntity="Device" syncable="YES"/>
     </entity>
     <fetchRequest name="FetchAllUsers" entity="User"/>
     <elements>
-        <element name="User" positionX="-63" positionY="-18" width="128" height="135"/>
+        <element name="BrushEvent" positionX="376" positionY="-207" width="128" height="223"/>
+        <element name="Device" positionX="81" positionY="-300" width="128" height="343"/>
+        <element name="User" positionX="-162" positionY="-112" width="128" height="148"/>
     </elements>
 </model>
