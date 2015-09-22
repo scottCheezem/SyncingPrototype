@@ -37,18 +37,31 @@
         <relationship name="connectedUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="devices" inverseEntity="User" syncable="YES"/>
     </entity>
     <entity name="User" representedClassName=".User" syncable="YES">
+        <attribute name="autoOffTimerEnabled" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="birthday" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="brushingReminderEnabled" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="clientCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="clientUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="currentUser" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageChangedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="isFullySynced" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="motorSpeedPercentage" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="pusherID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="quadrantTimerEnabled" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="serverCreatedAt" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="serverUpdatedAt" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="userID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="zipCode" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="devices" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Device" inverseName="connectedUser" inverseEntity="Device" syncable="YES"/>
     </entity>
     <fetchRequest name="FetchAllUsers" entity="User"/>
     <elements>
         <element name="BrushEvent" positionX="376" positionY="-207" width="128" height="223"/>
         <element name="Device" positionX="81" positionY="-300" width="128" height="343"/>
-        <element name="User" positionX="-162" positionY="-112" width="128" height="148"/>
+        <element name="User" positionX="-162" positionY="-112" width="128" height="343"/>
     </elements>
 </model>

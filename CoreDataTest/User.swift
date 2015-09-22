@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import DataCoordinator
 
-public class User: NSManagedObject, Syncable {
+class User: NSManagedObject, Syncable {
     
     // MARK: Initialization
     
@@ -23,40 +23,61 @@ public class User: NSManagedObject, Syncable {
         clientCreatedAt = NSDate()
     }
     
-    static public var name: String = "User"
-    static public var primaryKeyTitle: String = "userID"
+    static var name: String = "User"
+    static var primaryKeyTitle: String = "userID"
  
     // MARK: Properties
     
-    @NSManaged public var firstName: String
-    @NSManaged public var serverUpdatedAt: NSDate
-    @NSManaged public var clientUpdatedAt: NSDate
-    @NSManaged public var serverCreatedAt: NSDate
-    @NSManaged public var clientCreatedAt: NSDate
-    @NSManaged public var updatedOnClientAndServer: Bool
-    @NSManaged public var deletedAt : NSDate?
+    @NSManaged var firstName: String
+    @NSManaged var serverUpdatedAt: NSDate
+    @NSManaged var clientUpdatedAt: NSDate
+    @NSManaged var serverCreatedAt: NSDate
+    @NSManaged var clientCreatedAt: NSDate
+    @NSManaged var updatedOnClientAndServer: Bool
+    @NSManaged var deletedAt : NSDate?
     // MARK: Class Functions
 
-    public func populateWithJson(jsonDict: NSDictionary) {
+    func populateWithJson(jsonDict: NSDictionary) {
         firstName = jsonDict["first_name"] as! String
         
         serverCreatedAt = NSDate.parse((jsonDict["created_at"] as? String)!)
         serverUpdatedAt = NSDate.parse((jsonDict["updated_at"] as? String)!)
     }
     
-    public var primaryKeyValue : String {
+    var primaryKeyValue : String {
         get {
             return "EventuallyTheUserID"
         }
     }
     
-    public func jsonRepresentation() -> NSDictionary {
+    func jsonRepresentation() -> NSDictionary {
         return ["first_name": firstName, "created_at": clientCreatedAt.toString(), "updated_at": clientCreatedAt.toString()]
     }
     
     // MARK: API Endpoint
     
-    static public var apiEndPointForClass: String = "user"
+    static var apiEndPointForClass: String = "user"
+    
+    //MARK: Class specific properties
+    
+    @NSManaged var motorSpeedPercentage : NSNumber?
+    @NSManaged var email : String?
+    @NSManaged var gender : String?
+    @NSManaged var lastName : String?
+    @NSManaged var pusherID : String?
+    @NSManaged var userID : String?
+    @NSManaged var zipCode : String?
+    @NSManaged var autoOffTimerEnabled : NSNumber?
+    @NSManaged var brushingReminderEnabled : NSNumber?
+    @NSManaged var currentUser : NSNumber?
+    @NSManaged var quadrantTimerEnabled : NSNumber?
+    @NSManaged var birthday : NSDate?
+    @NSManaged var imageChangedOn : NSDate?
+    @NSManaged var devices: NSSet?
+    
+    
+    
+    
     
 //    // MARK: Computed Properties
 //    
@@ -164,7 +185,7 @@ public class User: NSManagedObject, Syncable {
 //    
 //    // MARK: Property Functions
 //    
-//    public func ownsDeviceDictionary(dictionary: Dictionary<String, String>, keys: [String], completionHandler: (value: Bool) -> Void) -> () {
+//    func ownsDeviceDictionary(dictionary: Dictionary<String, String>, keys: [String], completionHandler: (value: Bool) -> Void) -> () {
 //        var value = deviceMatchesUserInfo(dictionary)
 //        
 //        if value {
@@ -178,7 +199,7 @@ public class User: NSManagedObject, Syncable {
 //        completionHandler(value: value)
 //    }
 //    
-//    public func currentUserChallengeWithBlock(block: UserChallengeBlock) {
+//    func currentUserChallengeWithBlock(block: UserChallengeBlock) {
 //        if overrideChallenge {
 //            if block {
 //                block(overrideChallenge)
@@ -204,7 +225,7 @@ public class User: NSManagedObject, Syncable {
 //        }
 //    }
 //    
-//    public func connectedUsersWithUserShares(userShares: [UserShare]) {
+//    func connectedUsersWithUserShares(userShares: [UserShare]) {
 //        let acceptedUserShares = [UserShare]()
 //        for userShare in userShares {
 //            if userShare.accepted {
