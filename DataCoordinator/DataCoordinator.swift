@@ -16,7 +16,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
     /// Object that is used to interact with objects that are stored on the device.
     private let dataSource = DataSource()
     
-    public var apiClient : APIClient
+    private var apiClient : APIClient
     
     /**
     Main Initializer
@@ -35,6 +35,7 @@ public class DataCoordinator: NSObject, SyncingDataSource, SyncingNetworkService
         super.init()
         serverAndClientSyncingService = ServerAndClientSyncService(withDataSource: self, networkService: self, serverUpdateableClasses: configuration.serverUpdateableClasses, andClientUpdateableClasses: configuration.clientUpdateableClasses)
     }
+    
     /**
     Syncs all objects that are not updated on either the client or the server.
     

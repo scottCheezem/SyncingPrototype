@@ -11,7 +11,7 @@ import Foundation
 /**
 *  Protocol an object must conform to in order to receive updates on objects being saved to the device.
 */
-public protocol SyncableTypeUpdateListener {
+public protocol SyncableTypeUpdateListener : class {
     /**
     Method that will be called when the objects meeting the listener's criteria have been saved.
     
@@ -24,7 +24,7 @@ public protocol SyncableTypeUpdateListener {
     
     - parameter newOrUpdatedObjects: objects that have been deleted.
     */
-    func objectsListeningToWhereDeleted(deletedObjects : [Syncable])
+    func objectsListeningToWereDeleted(deletedObjects : [Syncable])
 }
 
 /// This class is used to update subscribed listeners when
@@ -43,9 +43,9 @@ public class DataPersistanceUpdateNotifier {
     public init(syncableTypeDictionary : [String : Syncable.Type]) {
         self.syncableTypeDictionary = syncableTypeDictionary
         
-        for (key, _) in self.syncableTypeListenerDictionary {
+        for (key, _) in self.syncableTypeDictionary {
             let listenersForType = [UpdateListenerInformation]()
-            syncableTypeListenerDictionary[key] = listenersForType
+            self.syncableTypeListenerDictionary[key] = listenersForType
         }
     }
     
@@ -59,14 +59,15 @@ public class DataPersistanceUpdateNotifier {
     - parameter syncableType:    Type that the listener needs updates on.
     - parameter filterPredicates: Optional predicate to furthers restrict the objects that will trigger an update for the listener. Multiple predicates will be treated as OR.
     */
-    public func addListener(listener : SyncableTypeUpdateListener, forSyncableType syncableType : Syncable.Type, withOptionalFilterPredicates filterPredicates : [NSPredicate]?) {
+    public func addListener(listener : SyncableTypeUpdateListener, forSyncableType syncableType : Syncable.Type, withOptionalFilterBlocks filterBlocks : [(objectToFilter : Syncable) -> Bool]?) {
         
         //TODO: Clean this up.
+        
         let keyOptional = getTypeKeyForSyncableType(syncableType)
         guard let key = keyOptional else { return }
         
         var listenersArray = syncableTypeListenerDictionary[key]
-        let listenerInfoToAdd = UpdateListenerInformation(listenerObject: listener, predicates: filterPredicates)
+        let listenerInfoToAdd = UpdateListenerInformation(listenerObject: listener, filterBlocks: filterBlocks)
         
         listenersArray!.append(listenerInfoToAdd)
         syncableTypeListenerDictionary[key] = listenersArray
@@ -109,9 +110,9 @@ public class DataPersistanceUpdateNotifier {
         let allListenersForType = syncableTypeListenerDictionary[typeKey]!
         
         for listenerInfo in allListenersForType {
-            let objectsMeetingCriteria = listenerInfo.filteredObjectMeetingPredicates(objects)
+            let objectsMeetingCriteria = listenerInfo.objectsThatMeetFilters(objects)
             if objectsMeetingCriteria.count > 0 {
-                listenerInfo.listenerObject.objectsListeningToWereUpdatedOrCreated(objectsMeetingCriteria)
+                listenerInfo.listenerObject?.objectsListeningToWereUpdatedOrCreated(objectsMeetingCriteria)
             }
         }
     }
@@ -127,9 +128,9 @@ public class DataPersistanceUpdateNotifier {
         let allListenersForType = syncableTypeListenerDictionary[typeKey]!
         
         for listenerInfo in allListenersForType {
-            let objectsMeetingCriteria = listenerInfo.filteredObjectMeetingPredicates(deletedObjects)
+            let objectsMeetingCriteria = listenerInfo.objectsThatMeetFilters(deletedObjects)
             if objectsMeetingCriteria.count > 0 {
-                listenerInfo.listenerObject.objectsListeningToWereUpdatedOrCreated(objectsMeetingCriteria)
+                listenerInfo.listenerObject?.objectsListeningToWereDeleted(objectsMeetingCriteria)
             }
         }
     }
@@ -190,25 +191,41 @@ public class DataPersistanceUpdateNotifier {
 internal struct UpdateListenerInformation {
     
     /// Listener object that needs information
-    var listenerObject : SyncableTypeUpdateListener
+    weak var listenerObject : SyncableTypeUpdateListener?
     
-    /// predicates that define the objects that the listener needs to listen to.
-    var predicates : [NSPredicate]?
+    /// filter blocks that define the objects that the listener needs to listen to.
+    var filterBlocks : [(objectToFilter : Syncable ) -> Bool]?
     
     /**
-    Filters the passed in objects according to the predicates property
+    Determines if an object meets the criteria of at least one of the blocks used for filtering.
+    
+    - parameter object: Object to compare against the filter blocks
+    
+    - returns: Bool indicating if the object passes at least one of the filters.
+    */
+    private func determineIfObectPassesFilters(object : Syncable) -> Bool   {
+        guard let filterBlocksLocal = filterBlocks else { return true}
+        
+        var objectPassesFilter = false
+        
+        for filterBlock in filterBlocksLocal {
+            if filterBlock(objectToFilter: object) {
+                objectPassesFilter = true
+                break;
+            }
+        }
+        
+        return objectPassesFilter
+    }
+    
+    /**
+    Filters the passed in objects according to the filterBlocks property
     
     - parameter objects: objects that need to be filtered according to the predicates.
     
-    - returns: filtered objects meeting the parameters of the predicate.
+    - returns: filtered objects meeting the cru.
     */
-    internal func filteredObjectMeetingPredicates(objects : [Syncable]) -> [Syncable] {
-        guard let predicatesLocal = predicates else  { return objects }
-        
-        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: predicatesLocal)
-        return objects.filter {object in
-            let castedObject = object as! AnyObject
-            return compoundPredicate.evaluateWithObject(castedObject)
-        }
+    internal func objectsThatMeetFilters(objects : [Syncable]) -> [Syncable] {
+        return objects.filter{determineIfObectPassesFilters($0)}
     }
 }

@@ -39,7 +39,9 @@ class SyncableTestClass : UpdateableTestClass, Syncable {
 }
 
 class Car : SyncableTestClass {
-    
+    var year = 2000
+    var isUsed = false
+    var make = ""
 }
 
 class Driver : UpdateableTestClass {
@@ -47,7 +49,9 @@ class Driver : UpdateableTestClass {
 }
 
 class Mechanic: SyncableTestClass {
-    
+    var isShady = false
+    var laborRate = 55.0
+    var title = ""
 }
 
 class GasStation : UpdateableTestClass {
